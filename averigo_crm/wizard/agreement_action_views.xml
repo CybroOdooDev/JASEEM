@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="agreement_action_wizard_view" model="ir.ui.view">
+        <field name="name">Agreement Wizard view</field>
+        <field name="model">agreement.action.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Agreement Attachment">
+                <group>
+                    <group>
+                        <field name="email_id" string="Recipients"/>
+                    </group>
+                    <group>
+                         <field name="additional_emails" string="Additional Emails"
+                           widget="many2many_tags"/>
+                    </group>
+                </group>
+                <strong>
+                    Attach Necessary File Here...
+                </strong>
+                <field name="check" id='check' invisible="1"/>
+                <br/><br/>
+
+                <field name="file" string="Document_preview" filename="file_name" widget="pdf_viewer_edit"/>
+                <field name="file_name" invisible="1"/>
+                <footer>
+                    <button name="send_documents" type="object"
+                            context="{'key': 0}" invisible="check == False"
+                            string="Send Documents"
+                            class="oe_highlight"/>
+                    <button name="action_accept" string="Submit"
+                            type="object" invisible="check == True"
+                            default_focus="1"
+                            class="oe_highlight submit"/>
+
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_agreement_wizard" model="ir.actions.act_window">
+        <field name="name">Agreement wizard</field>
+        <field name="res_model">agreement.action.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="agreement_action_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="agreement_popup_wizard_view" model="ir.ui.view">
+        <field name="name">Agreement Popup Wizard view</field>
+        <field name="model">agreement.popup.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Popup Message">
+                    <p>
+                        You Didn't Attached any files.
+                        Do You Want To Continue?
+                    </p>
+                <footer>
+                    <button name="action_continue" string="Continue"
+                            type="object" default_focus="1"
+                            class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_agreement_popup_wizard" model="ir.actions.act_window">
+        <field name="name">Agreement Popup wizard</field>
+        <field name="res_model">agreement.popup.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="agreement_popup_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

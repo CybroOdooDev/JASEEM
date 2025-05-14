@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="activity_type_form_view" model="ir.ui.view">
+        <field name="name">mail.activity.type.view.form.inherit</field>
+        <field name="model">mail.activity.type</field>
+        <field name="inherit_id" ref="mail.mail_activity_type_view_form"/>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='activity_planning']" position="inside">
+                <field name="survey_template_id" string="Survey Template"
+                       invisible="name != 'Site Survey'"/>
+            </xpath>
+        </field>
+    </record>
+    <!--Overriding the action to remove the context of activity type-->
+    <record id="sales_team.mail_activity_type_action_config_sales" model="ir.actions.act_window">
+        <field name="domain">['|', ('res_model', '=', False), ('res_model', 'in', ['crm.lead', 'res.partner'])]</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="transfer_users_form">
+            <field name="name">transfer.lead.users.form</field>
+            <field name="model">transfer.lead.users</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="User Details">
+                                <field name="transfer_user_ids">
+                                    <list editable="bottom">
+                                        <field name="company_id"/>
+                                        <field name="user_ids" widget="many2many_tags"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+         <record id="transfer_view_admin_users" model="ir.actions.act_window">
+        <field name="name">Transfer Lead Access Users</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">transfer.lead.users</field>
+        <field name="res_id" ref="averigo_crm.transfer_admin_users"/>
+        <field name="context">{'create': False, 'delete': False}</field>
+        <field name="view_mode">form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('averigo_crm.transfer_users_form')})]"/>
+    </record>
+
+        <record model="ir.ui.view" id="transfer_assign_users_form">
+            <field name="name">default.lead.assign.users.form</field>
+            <field name="model">default.lead.assign.users</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="Default Assign User Details">
+                                <field name="default_user_ids">
+                                    <list editable="bottom">
+                                        <field name="company_id"/>
+                                        <field name="user_id"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+         <record id="transfer_view_assign_users" model="ir.actions.act_window">
+        <field name="name">Default Transfer Lead Assign Users</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">default.lead.assign.users</field>
+        <field name="res_id" ref="averigo_crm.default_transfer_assign_users"/>
+        <field name="context">{'create': False, 'delete': False}</field>
+        <field name="view_mode">form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('averigo_crm.transfer_assign_users_form')})]"/>
+    </record>
+      <menuitem id="crm.transfer_users_config"
+              name="Transfer Access Users" groups="base.group_multi_company"
+              parent="crm.crm_menu_config"
+              action="averigo_crm.transfer_view_admin_users"/>
+        <menuitem id="crm.transfer_assign_users_config"
+              name="Default Transfer Assign Users" groups="base.group_multi_company"
+              parent="crm.crm_menu_config"
+              action="averigo_crm.transfer_view_assign_users"/>
+
+    </data>
+</odoo>

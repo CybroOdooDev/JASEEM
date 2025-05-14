@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="proposal_action_wizard_view" model="ir.ui.view">
+        <field name="name">Proposal Wizard view</field>
+        <field name="model">proposal.action.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Proposal Attachment">
+                    <p>
+                        <strong>
+                            Submit Proposal Attachments Here...
+                            <br/>
+                            By Clicking Submit opportunity state will be moved to Proposal.
+                        </strong>
+                        <br/>
+                        <br/>
+                               <field name="attachment_ids"
+                               string="Proposals"
+                               filename="name"
+                               widget="many2many_binary"
+                               domain="['|',('create_uid','=',uid),('create_uid','=',False)]"/>
+
+                    </p>
+                <footer>
+                    <button name="action_accept" string="Submit"
+                            type="object"  default_focus="1"
+                            class="oe_highlight submit"/>
+
+
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+     <record id="proposal_action_wizard_view_list" model="ir.ui.view">
+        <field name="name">Proposal Wizard view list</field>
+        <field name="model">proposal.action.wizard</field>
+        <field name="arch" type="xml">
+            <list string="Proposal Attachment">
+                        <field name="attachment_ids" class='attach_id'
+                               string="Proposals" widget="many2many_attachment_preview"
+                               filename="name"/>
+                <field name="date"/>
+
+            </list>
+        </field>
+    </record>
+
+    <record id="action_proposal_wizard" model="ir.actions.act_window">
+        <field name="name">Proposal wizard</field>
+        <field name="res_model">proposal.action.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="proposal_action_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

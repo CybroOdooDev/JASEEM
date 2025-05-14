@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_crm_lead_status,crm.lead.status,model_crm_lead_status,base.group_system,1,1,1,1
+access_crm_visitor_types,crm.visitor.types,model_crm_visitor_types,base.group_system,1,1,1,1
+access_proposal_action_wizard,proposal.action.wizard,model_proposal_action_wizard,,1,1,1,0
+access_agreement_action_wizard,agreement.action.wizard,model_agreement_action_wizard,,1,1,1,0
+access_additional_emails,additional.emails,model_additional_emails,,1,1,1,0
+access_agreement_popup_wizard,agreement.popup.wizard,model_agreement_popup_wizard,,1,1,1,1
+access_sow_action_wizard,sow.action.wizard,model_sow_action_wizard,,1,1,1,0
+access_transfer_lead_wizard,transfer.lead.wizard,model_transfer_lead_wizard,,1,1,1,1
+access_transfer_lead_users,transfer.lead.users,model_transfer_lead_users,base.group_multi_company,1,1,0,0
+access_transfer_access_users,transfer.access.users,model_transfer_access_users,base.group_multi_company,1,1,1,1
+access_transfer_lead_assign_users,default.lead.assign.users,model_default_lead_assign_users,base.group_user,1,1,0,0
+access_transfer_assign_users,transfer.assign.users,model_transfer_assign_users,base.group_user,1,1,1,1
+access_crm_users_notify,crm.users.notify,model_crm_users_notify,base.group_user,1,1,0,0

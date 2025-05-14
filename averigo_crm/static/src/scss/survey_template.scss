@@ -1,0 +1,102 @@
+.o_survey_nav {
+    padding-top: 15px;
+    padding-bottom: 25px;
+}
+
+.o_survey_title {
+    padding-bottom: 15px !important;
+}
+
+.js_question-wrapper {
+    padding-bottom: 25px !important;
+}
+.js_question-wrapper h3 {
+    color: #399cd7;
+    font-family: helvetica;
+    font-size: 14px !important;
+    width: 130px;
+    display: block;
+    float: none;
+    width: auto;
+    font-weight: 500;
+    line-height: 20px;
+    padding-top: 0;
+    margin-bottom: 4px;
+}
+.js_question-wrapper input{
+    box-sizing: border-box;
+    padding: 0 15px;
+    min-height: 27px;
+    background-color: #F5F8FA;
+    display: inline-block;
+    width: 98%;
+    height: 40px;
+    padding: 9px 10px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 22px;
+    color: #33475B;
+    border: 1px solid #CBD6E2;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+}
+.js_question-wrapper textarea{
+    box-sizing: border-box;
+    padding: 0 15px;
+    min-height: 27px;
+    background-color: #F5F8FA;
+    display: inline-block;
+    width: 98%;
+    height: auto;
+    padding: 9px 10px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 22px;
+    color: #33475B;
+    border: 1px solid #CBD6E2;
+    box-sizing: border-box;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+}
+.input-group.date {
+    width: 95% !important;
+}
+.o_survey_title {
+    margin-bottom: 3px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 24px;
+    font-size: 23px;
+    color: #33475b !important;
+    float: left;
+    font-weight: 600;
+    padding-top: 1rem !important;
+    width: 100%;
+}
+.w-33{
+    width:33%;
+}
+input[type="checkbox"], input[type="radio"] {
+    height: auto !important;
+    min-height: auto !important;
+    width: auto !important;
+}
+.js_surveyform .btn.btn-primary {
+    background: #7bbb42;
+    border-color: #7bbb42;
+    color: #ffffff;
+    font-size: 14px;
+    font-family: helvetica;
+    height: 40px;
+    padding: 10px 15px;
+}
+
+ label{
+    font-weight: 700;
+    color: #399cd7;
+}

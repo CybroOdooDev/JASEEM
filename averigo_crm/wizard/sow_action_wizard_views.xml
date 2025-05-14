@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="sow_action_wizard_view" model="ir.ui.view">
+        <field name="name">Sow Wizard view</field>
+        <field name="model">sow.action.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Sow Attachment">
+                <group>
+                    <group>
+                        <field name="email_ids" string="Emails"
+                       widget="many2many_tags"/>
+                    </group>
+                </group>
+                    <p>
+                        <strong>
+                            Attach Necessary File Here...
+                        </strong>
+                        <br/>
+                         <field name="check"  invisible="1"/>
+                        <field name="file" filename="file_name" string="Document_preview"
+                               attachment="True" widget="pdf_viewer_edit"/>
+                        <field name="file_name" invisible="1"/>
+                    </p>
+                <footer>
+                    <button name="send_sow" type="object" context="{'key': 0}"
+                            string="Send SOW" invisible="check == False"
+                            class="oe_highlight"/>
+                    <button name="action_accept" string="Submit"
+                            type="object" invisible="check == True"
+                            default_focus="1"
+                            class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sow_wizard" model="ir.actions.act_window">
+        <field name="name">Sow wizard</field>
+        <field name="res_model">sow.action.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sow_action_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

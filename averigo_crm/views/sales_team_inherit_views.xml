@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="sales_team_form_view_inherit" model="ir.ui.view">
+        <field name="name">sales.team.view.form.inherit</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="before">
+                <field name="user_ids" string="Users" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

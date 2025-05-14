@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="crm_convert_wizard" model="ir.ui.view">
+        <field name="name">crm.lead2opportunity.partner.form</field>
+        <field name="model">crm.lead2opportunity.partner</field>
+        <field name="inherit_id" ref="crm.view_crm_lead2opportunity_partner"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="replace">
+                <form string="Convert to Opportunity">
+                    <group string="Assign this opportunity to">
+                        <field name="user_id" domain="[('share', '=', False)]"/>
+                        <field name="team_id" widget="selection" options="{'no_open': True, 'no_create': True}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                    </group>
+                    <field name="action" nolabel="1" widget="radio" style="display: none;"/>
+                    <footer>
+                        <button name="create_customer" string="Create Customer" type="object" class="btn-primary report_button"/>
+                        <button name="convert_lead" string="Convert To Opportunity" type="object" class="btn-primary report_button"/>
+                        <button string="Cancel" class="btn-secondary o_form_button_cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm.action_crm_lead2opportunity_partner" model="ir.actions.act_window">
+        <field name="name">Convert to Opportunity</field>
+    </record>
+
+</odoo>

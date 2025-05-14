@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Inheriting mail activity form view to add company_id field-->
+    <record id="activity_form_view_inherit" model="ir.ui.view">
+        <field name="name">mail.activity.view.form.inherits</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form_popup"/>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='res_model_id']" position="after">
+                <field name="company_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mail_activity_view_tree" model="ir.ui.view">
+        <field name="name">mail.activity.tree</field>
+        <field name="model">mail.activity</field>
+        <field name="priority" eval="0"/>
+        <field name="arch" type="xml">
+            <list>
+                <field name="res_name" string="Name"/>
+                <field name="user_id" string="Assigned To"/>
+                <field name="summary" string="Summary"/>
+                <field name="create_uid" string="Created User"/>
+                <field name="create_date" string="Created Date"/>
+                <field name="activity_type_id" string="Activity Type"/>
+                <field name="date_deadline" string="Due Date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="planned_activity_view_tree" model="ir.ui.view">
+        <field name="name">planned.mail.activity.tree</field>
+        <field name="model">mail.activity</field>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <list create="0">
+                <field name="res_name" string="Name"/>
+                <field name="user_id" string="Assigned To"/>
+                <field name="summary" string="Summary"/>
+                <field name="create_uid" string="Created User"/>
+                <field name="create_date" string="Created Date"/>
+                <field name="activity_type_id" string="Activity Type"/>
+                <field name="date_deadline" string="Due Date"/>
+            </list>
+        </field>
+    </record>
+
+     <record id="planned_activity_view_form" model="ir.ui.view">
+        <field name="name">planned.mail.activity.form</field>
+        <field name="model">mail.activity</field>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <field name="res_name" string="Name"/>
+                        <field name="activity_type_id" string="Activity Type"/>
+                        <field name="user_id" string="Assigned To"/>
+                        <field name="summary" string="Summary"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="res_model" invisible="1"/>
+                        <field name="create_date" string="Created Date"/>
+                        <field name="date_deadline" string="Due Date"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+      <record id="ir_actions_view_activities" model="ir.actions.act_window">
+            <field name="name">Planned Activities</field>
+            <field name="res_model">mail.activity</field>
+            <field name="view_mode">list,form,kanban</field>
+            <field name="target">current</field>
+            <field name="domain">[]</field>
+            <!--            <field name="context">{'group_by':['partner_id']}</field>-->
+        </record>
+
+     <record id="ir_actions_events" model="ir.actions.act_window">
+            <field name="name">Calendar Events</field>
+            <field name="res_model">calendar.event</field>
+            <field name="view_mode">list,form,kanban</field>
+            <field name="target">current</field>
+            <field name="domain">['|', ('user_id', '=', uid), ('create_uid', '=', uid)]</field>
+            <!--            <field name="context">{'group_by':['partner_id']}</field>-->
+        </record>
+
+    <menuitem id="crm.res_partner_menu_customer" name="Customers"
+                  action="averigo_base_customer.res_partner_operator_action" sequence="5"/>
+
+     <menuitem id="ir_menu_view_activities_crm" action="ir_actions_view_activities" name="Planned Activities"
+                  parent="crm.crm_menu_root"/>
+
+    <menuitem id="ir_menu_view_events_crm" action="ir_actions_events" name="Calendar Events"
+                  parent="crm.crm_menu_root"/>
+</odoo>
