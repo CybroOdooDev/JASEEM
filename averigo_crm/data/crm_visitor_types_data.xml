@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
+    <!-- Family -->
     <record model="crm.visitor.types" id="visitors_family">
         <field name="visitors">Family</field>
     </record>
+    <!-- Businessman -->
     <record model="crm.visitor.types" id="visitors_businessman">
         <field name="visitors">Businessman</field>
     </record>
+    <!-- Youth -->
     <record model="crm.visitor.types" id="visitors_youth">
         <field name="visitors">Youth</field>
     </record>
-    <!--    Admin Users For CRM-->
+    <!-- Administrators -->
     <record model="crm.users.notify" id="Crm_admin_users">
         <field name="name">Admin users</field>
     </record>
-    <!-- Transfer Access users Record-->
+    <!-- Transferrers -->
     <record model="transfer.lead.users" id="transfer_admin_users">
         <field name="name">Transfer Access users</field>
     </record>
-    <!--Default Lead Assign Users-->
+    <!-- Assigners -->
     <record model="default.lead.assign.users"
             id="default_transfer_assign_users">
         <field name="name">Default Lead Assign users</field>
     </record>
-
 </odoo>

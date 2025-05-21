@@ -9,11 +9,14 @@
     "author": "Cybrosys Techno Solutions Pvt Ltd.",
     "license": "LGPL-3",
     "depends": [
-        "base", "web", "crm", "mail", "base_averigo", "survey","averigo_base_customer",
+        "base", "web", "crm", "mail", "survey",
+        "averigo_base_customer",
+        'odoo_docusign_connector'
     ],
     "data": [
         "data/crm_visitor_types_data.xml",
         "data/crm_stage_data.xml",
+        "data/grabscango_site_survey.xml",
         "data/mail_template_data.xml",
         "data/survey_mail_template.xml",
         "security/ir.model.access.csv",
@@ -32,6 +35,7 @@
         "wizard/agreement_action_views.xml",
         "wizard/sow_action_wizard_views.xml",
         "wizard/transfer_wizard_views.xml",
+        "views/res_company_views.xml",
     ],
     "assets": {
         "survey.survey_assets": [
@@ -41,11 +45,16 @@
         ],
         "web.assets_backend": [
             "averigo_crm/static/src/js/attachment_preview.js",
-            # "averigo_crm/static/src/js/edit_document.js",
+            "averigo_crm/static/src/js/edit_document.js",
             "averigo_crm/static/src/xml/attachment_preview.xml",
             "averigo_crm/static/src/xml/pdf_viewer_field.xml",
             "averigo_crm/static/src/scss/pdf_viewer_edit.scss",
         ],
+        'web.assets_frontend': [
+
+        ]
+
+
     },
     "installable": True,
     "application": True,

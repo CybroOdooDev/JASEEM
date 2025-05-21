@@ -2,33 +2,41 @@
 <odoo>
     <data>
 
+
+
+
         <template id="message_survey_assigned">
-            <div style="margin: 0px; padding: 0px; font-size: 13px;">
-                <span t-field="activity.create_uid.name"/>
+    <div style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; background-color: #f8f8f8; border-radius: 8px; max-width: 600px;">
+        <!-- Header Section -->
+        <div style="background-color: #689f38; color: white; padding: 15px; border-top-left-radius: 8px; border-top-right-radius: 8px; text-align: center;">
+            <h2 style="margin: 0; font-weight: 500;">Survey Assignment</h2>
+        </div>
+
+        <!-- Content Section -->
+        <div style="padding: 20px; background-color: white; border-bottom: 1px solid #e9e9e9;">
+            <p style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">
+                <span style="font-weight: bold;" t-field="activity.create_uid.name"/>
                 assigned you an activity
-                <span t-field="activity.activity_type_id.name"/>
-                <t t-if="activity.summary">(<span t-field="activity.summary"/>)
-                </t>
-                on
-                <span t-field="activity.res_name"/>
-                to close for
-                <t t-esc="activity.date_deadline.strftime('%m/%d/%Y')"/>.
-                <br/>
-                <div>
-                    <p style="margin: 16px 0px 16px 0px;">
-                        <a t-att-href="'%s/mail/view?model=%s&amp;res_id=%s' % (activity.user_id.company_id.exact_domain,activity.res_model, activity.res_id)"
-                           style="background-color: #689f38;padding: 8px 16px 8px 16px;text-decoration: none;color: #fff;border-radius: 5px;font-size: 13px;">
-                            View
-                            <t t-esc="model_description or 'document'"/>
-                        </a>
-                    </p>
-                    <a t-att-href="activity.base_url"
-                       style="background-color: #689f38;padding: 8px 16px 8px 16px;text-decoration: none;color: #fff;border-radius: 5px;font-size: 13px;">
-                        Go to Survey
-                    </a>
-                </div>
+                <span style="color: #689f38; font-weight: bold;" t-field="activity.activity_type_id.name"/>
+                <t t-if="activity.summary">(<span t-field="activity.summary"/>)</t>
+                on <span style="font-weight: bold;" t-field="activity.res_name"/>
+                to close for <span style="font-weight: bold; color: #e74c3c;" t-esc="activity.date_deadline.strftime('%m/%d/%Y')"/>.
+            </p>
+
+            <!-- Call to Action Buttons -->
+            <div style="text-align: center; margin: 25px 0 10px;">
+                <a t-att-href="'%s/mail/view?model=%sres_id=%s' % (activity.user_id.company_id.exact_domain, activity.res_model, activity.res_id)"
+                   style="display: inline-block; background-color: #689f38; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; margin-right: 15px; font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    View <t t-esc="model_description or 'document'"/>
+                </a>
+                <a t-att-href="session_link"
+                   style="display: inline-block; background-color: #689f38; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    Go to Survey
+                </a>
             </div>
-        </template>
+        </div>
+    </div>
+</template>
 
         <record id="message_state_assigned" model="mail.template">
             <field name="name">Opportunity: State Change</field>
@@ -37,120 +45,103 @@
                 by {{ object.user_id.name }}
             </field>
             <field name="body_html" type="html">
-                <table border="0" cellpadding="0" cellspacing="0"
-                       style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                <table style="padding-top: 16px; background-color: #F1F1F1; font-family: Verdana, Arial, sans-serif; color: #454748; width: 100%; border-collapse: separate;">
                     <tr>
                         <td align="center">
-                            <table border="0" cellpadding="0" cellspacing="0"
-                                   width="590"
-                                   style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
-                                <tbody>
-                                    <tr>
-                                        <td align="center"
-                                            style="min-width: 590px;">
-                                            <table border="0" cellpadding="0"
-                                                   cellspacing="0" width="590"
-                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                                                <tr>
-                                                    <td valign="middle">
-                                                        <span style="font-size: 10px;">
-                                                            Your
-                                                            Opportunity
-                                                        </span>
-                                                        <br/>
-                                                        <span style="font-size: 20px; font-weight: bold;"
-                                                              t-out="object.name">
-                                                        </span>
-                                                    </td>
-                                                    <td valign="middle"
-                                                        align="right">
-                                                        <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
-                                                             style="padding: 0px; margin: 0px; height: auto; width: 80px;"
-                                                             t-att-alt="object.company_id.name"/>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"
-                                                        style="text-align:center;">
-                                                        <hr width="100%"
-                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <!-- CONTENT -->
-                                    <tr>
-                                        <td align="center"
-                                            style="min-width: 590px;">
-                                            <table border="0" cellpadding="0"
-                                                   cellspacing="0" width="590"
-                                                   style="min-width: 590px; background-color: white;
-                                                   padding: 0px 8px 0px 8px; border-collapse:separate;">
-                                                <tr>
-                                                    <td valign="top"
-                                                        style="font-size: 13px;">
-                                                        <div>
-                                                            Opportunity
-                                                            <b>
-                                                                <t t-out="object.name"/>
-                                                            </b>
-                                                            <t t-if="object.partner_id">
-                                                                with Customer
-                                                                <b>
-                                                                    <t t-out="object.partner_id.name"/>
-                                                                </b>
-                                                            </t>
-                                                            , Status has been
-                                                            changed to
-                                                            <b>
-                                                                <t t-out="object.stage_id.name"/>
-                                                            </b>
-                                                            by User
-                                                            <t t-out="object.user_id.name"/>
-                                                            <br/>
-                                                            <br/>
-                                                            <p style="margin: 16px 0px 16px 0px;">
-                                                                <a t-attf-href="{{ object.opportunity_url }}"
-                                                                   style="background-color: #689f38;padding: 8px 16px 8px 16px;text-decoration: none;color: #fff;border-radius: 5px;font-size: 13px;">
-                                                                    View
-                                                                    Opportunity
-                                                                </a>
-                                                            </p>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="text-align:center;">
-                                                        <hr width="100%"
-                                                            style="background-color:rgb(204,204,204);
-                                                            border:medium none;clear:both;display:block;f
-                                                            ont-size:0px;min-height:1px;line-height:0;
-                                                            margin: 16px 0px 16px 0px;"/>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <!-- FOOTER -->
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    <!--                    POWERED BY-->
-                    <tr>
-                        <td align="center" style="min-width: 590px;">
-                            <table border="0" cellpadding="0" cellspacing="0"
-                                   width="590"
-                                   style="min-width: 590px; background-color: #F1F1F1; color: #454748;
-                                   padding: 8px; border-collapse:separate;">
+                            <table width="590"
+                                   style="padding: 16px; background-color: white; color: #454748; border-collapse: separate;">
                                 <tr>
-                                    <td style="text-align: center; font-size: 13px;">
-                                        Powered by
-                                        <a target="_blank"
-                                           t-attf-href="https://www.averigo.com/"
-                                           style="color: #689f38;">AveriGo LLC
-                                        </a>
+                                    <td align="center"
+                                        style="min-width: 590px;">
+                                        <table width="590"
+                                               style="min-width: 590px; background-color: white; padding: 0 8px; border-collapse: separate;">
+                                            <tr>
+                                                <td valign="middle">
+                                                    <span style="font-size: 10px;">
+                                                        Your Opportunity
+                                                    </span>
+                                                    <br/>
+                                                    <span style="font-size: 20px; font-weight: bold;"
+                                                          t-out="object.name"/>
+                                                </td>
+                                                <td valign="middle"
+                                                    align="right">
+                                                    <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                         style="padding: 0; margin: 0; height: auto; width: 80px;"
+                                                         t-att-alt="object.company_id.name"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"
+                                                    style="text-align: center;">
+                                                    <hr style="background-color: rgb(204,204,204); border: none; clear: both; display: block; font-size: 0; min-height: 1px; line-height: 0; margin: 16px 0;"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center"
+                                        style="min-width: 590px;">
+                                        <table width="590"
+                                               style="min-width: 590px; background-color: white; padding: 0 8px; border-collapse: separate;">
+                                            <tr>
+                                                <td valign="top"
+                                                    style="font-size: 13px;">
+                                                    <div>
+                                                        Opportunity
+                                                        <b>
+                                                            <t t-out="object.name"/>
+                                                        </b>
+                                                        <t t-if="object.partner_id">
+                                                            with Customer
+                                                            <b>
+                                                                <t t-out="object.partner_id.name"/>
+                                                            </b>
+                                                        </t>
+                                                        ,
+                                                        Status has been changed
+                                                        to
+                                                        <b>
+                                                            <t t-out="object.stage_id.name"/>
+                                                        </b>
+                                                        by User
+                                                        <t t-out="object.user_id.name"/>
+                                                        <br/>
+                                                        <br/>
+                                                        <p style="margin: 16px 0;">
+                                                            <a t-attf-href="{{ object.opportunity_url }}"
+                                                               style="background-color: #689f38; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">
+                                                                View Opportunity
+                                                            </a>
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: center;">
+                                                    <hr style="background-color: rgb(204,204,204); border: none; clear: both; display: block; font-size: 0; min-height: 1px; line-height: 0; margin: 16px 0;"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center"
+                                        style="min-width: 590px;">
+                                        <table width="590"
+                                               style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse: separate;">
+                                            <tr>
+                                                <td style="text-align: center; font-size: 13px;">
+                                                    Powered by
+                                                    <a target="_blank"
+                                                       t-attf-href="https://www.averigo.com/"
+                                                       style="color: #689f38;">
+                                                        AveriGo LLC
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
                             </table>
@@ -166,106 +157,88 @@
             <field name="subject">Opportunity: {{ object.name }}, Transfered.
             </field>
             <field name="body_html" type="html">
-                <table border="0" cellpadding="0" cellspacing="0"
-                       style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                <table style="padding-top: 16px; background-color: #F1F1F1; font-family: Verdana, Arial, sans-serif; color: #454748; width: 100%; border-collapse: separate;">
                     <tr>
                         <td align="center">
-                            <table border="0" cellpadding="0" cellspacing="0"
-                                   width="590"
-                                   style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
-                                <tbody>
-                                    <tr>
-                                        <td align="center"
-                                            style="min-width: 590px;">
-                                            <table border="0" cellpadding="0"
-                                                   cellspacing="0" width="590"
-                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                                                <tr>
-                                                    <td valign="middle">
-                                                        <span style="font-size: 10px;">
-                                                            Your
-                                                            Opportunity
-                                                        </span>
-                                                        <br/>
-                                                        <span style="font-size: 20px; font-weight: bold;"
-                                                              t-out="object.name"/>
-                                                    </td>
-                                                    <td valign="middle"
-                                                        align="right">
-                                                        <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
-                                                             style="padding: 0px; margin: 0px; height: auto; width: 80px;"
-                                                             t-att-alt="object.company_id.name"/>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"
-                                                        style="text-align:center;">
-                                                        <hr width="100%"
-                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <!--                                     CONTENT -->
-                                    <tr>
-                                        <td align="center"
-                                            style="min-width: 590px;">
-                                            <table border="0" cellpadding="0"
-                                                   cellspacing="0" width="590"
-                                                   style="min-width: 590px; background-color: white;
-                                                   padding: 0px 8px 0px 8px; border-collapse:separate;">
-                                                <tr>
-                                                    <td valign="top"
-                                                        style="font-size: 13px;">
-                                                        <div>
-                                                            The Opportunity
-                                                            <b>
-                                                                <t t-out="object.name"/>
-                                                            </b>
-                                                            , Has Been
-                                                            Transfered.
-                                                            <p style="margin: 16px 0px 16px 0px;">
-                                                                <a t-attf-href="{{ object.lead_transfer_url }}"
-                                                                   style="background-color: #689f38;padding: 8px 16px 8px 16px;text-decoration: none;color: #fff;border-radius: 5px;font-size: 13px;">
-                                                                    View
-                                                                    Opportunity
-                                                                </a>
-                                                            </p>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="text-align:center;">
-                                                        <hr width="100%"
-                                                            style="background-color:rgb(204,204,204);
-                                                            border:medium none;clear:both;display:block;f
-                                                            ont-size:0px;min-height:1px;line-height:0;
-                                                            margin: 16px 0px 16px 0px;"/>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <!-- FOOTER -->
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    <!-- POWERED BY -->
-                    <tr>
-                        <td align="center" style="min-width: 590px;">
-                            <table border="0" cellpadding="0" cellspacing="0"
-                                   width="590"
-                                   style="min-width: 590px; background-color: #F1F1F1; color: #454748;
-                                   padding: 8px; border-collapse:separate;">
+                            <table width="590"
+                                   style="padding: 16px; background-color: white; color: #454748; border-collapse: separate;">
                                 <tr>
-                                    <td style="text-align: center; font-size: 13px;">
-                                        Powered by
-                                        <a target="_blank"
-                                           t-attf-href="https://www.averigo.com/"
-                                           style="color: #689f38;">AveriGo LLC
-                                        </a>
+                                    <td align="center"
+                                        style="min-width: 590px;">
+                                        <table width="590"
+                                               style="min-width: 590px; background-color: white; padding: 0 8px; border-collapse: separate;">
+                                            <tr>
+                                                <td valign="middle">
+                                                    <span style="font-size: 10px;">
+                                                        Your Opportunity
+                                                    </span>
+                                                    <br/>
+                                                    <span style="font-size: 20px; font-weight: bold;"
+                                                          t-out="object.name"/>
+                                                </td>
+                                                <td valign="middle"
+                                                    align="right">
+                                                    <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                         style="padding: 0; margin: 0; height: auto; width: 80px;"
+                                                         t-att-alt="object.company_id.name"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"
+                                                    style="text-align: center;">
+                                                    <hr style="background-color: rgb(204,204,204); border: none; clear: both; display: block; font-size: 0; min-height: 1px; line-height: 0; margin: 16px 0;"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center"
+                                        style="min-width: 590px;">
+                                        <table width="590"
+                                               style="min-width: 590px; background-color: white; padding: 0 8px; border-collapse: separate;">
+                                            <tr>
+                                                <td valign="top"
+                                                    style="font-size: 13px;">
+                                                    <div>
+                                                        The Opportunity
+                                                        <b>
+                                                            <t t-out="object.name"/>
+                                                        </b>
+                                                        , Has Been Transfered.
+                                                        <p style="margin: 16px 0;">
+                                                            <a t-attf-href="{{ object.lead_transfer_url }}"
+                                                               style="background-color: #689f38; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">
+                                                                View Opportunity
+                                                            </a>
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: center;">
+                                                    <hr style="background-color: rgb(204,204,204); border: none; clear: both; display: block; font-size: 0; min-height: 1px; line-height: 0; margin: 16px 0;"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center"
+                                        style="min-width: 590px;">
+                                        <table width="590"
+                                               style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse: separate;">
+                                            <tr>
+                                                <td style="text-align: center; font-size: 13px;">
+                                                    Powered by
+                                                    <a target="_blank"
+                                                       t-attf-href="https://www.averigo.com/"
+                                                       style="color: #689f38;">
+                                                        AveriGo LLC
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
                             </table>
@@ -274,7 +247,5 @@
                 </table>
             </field>
         </record>
-
-
     </data>
 </odoo>

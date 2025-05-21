@@ -201,6 +201,7 @@ class CRMLead(models.Model):
 
     def create_account(self):
         """ To Create Customer From Opportunity"""
+        print("Ahmmmmmm", self.partner_name)
         customer = self.env['res.partner'].with_context(
             default_is_customer=True
         ).create({
@@ -215,20 +216,20 @@ class CRMLead(models.Model):
             'type': 'contact'
         })
         self.partner_id = customer.id
+        print("customer", customer)
+
         return {
-            'name': _('Reset Password'),
-            'type': 'ir.actions.act_window',
+            'name': _("Proposal"),
             'view_mode': 'form',
-            'views': [(
-                self.env.ref(
-                    'base_averigo.res_partner_view_form_base_averigo'
-                ).id,
-                'form'
-            )],
+            'view_id': self.env.ref(
+                'averigo_base_customer.res_partner_operator_action').id,
+            'view_type': 'form',
             'res_model': 'res.partner',
+            'type': 'ir.actions.act_window',
             'res_id': customer.id,
             'context': {'is_customer': True, 'active_id': customer.id},
             'target': 'current',
+
         }
 
     def action_view_sale_quotation(self):
@@ -308,26 +309,27 @@ class CRMLead(models.Model):
     def _compute_answers_count(self):
         """ To get the count of survey answers in opportunity form"""
         for record in self:
-            surveys = self.env['mail.activity.type'].search([
-                ('name', '=', "Site Survey"),
-                ('company_id', '=', self.company_id.id)
-            ])
-
-            for recd in record.activity_ids:
-                if surveys.name == recd.activity_type_id.name:
-                    self.is_activity_scheduled = True
-
-            rec_id = self.env['survey.user_input'].search([
-                ('lead_id', '=', self.id),
-                ('state', '=', 'done')
-            ], order='create_date desc', limit=1)
-
-            record_id = self.env['survey.user_input'].search([
-                ('lead_id', '=', self.parent_lead_id),
-                ('state', '=', 'done')
-            ], order='create_date desc', limit=1)
-
-            record.answer_count = 1 if (rec_id or record_id) else 0
+            record.answer_count = False
+            # surveys = self.env['mail.activity.type'].search([
+            #     ('name', '=', "Site Survey"),
+            #     ('company_id', '=', self.company_id.id)
+            # ])
+            #
+            # for recd in record.activity_ids:
+            #     if surveys.name == recd.activity_type_id.name:
+            #         self.is_activity_scheduled = True
+            #
+            # rec_id = self.env['survey.user_input'].search([
+            #     ('lead_id', '=', self.id),
+            #     ('state', '=', 'done')
+            # ], order='create_date desc', limit=1)
+            #
+            # record_id = self.env['survey.user_input'].search([
+            #     ('lead_id', '=', self.parent_lead_id),
+            #     ('state', '=', 'done')
+            # ], order='create_date desc', limit=1)
+            #
+            # record.answer_count = 1 if (rec_id or record_id) else 0
 
     def write(self, vals):
         """overrides write function to send mail for state change"""
@@ -338,6 +340,7 @@ class CRMLead(models.Model):
 
         if 'stage_id' in vals:
             base_url = self.env.user.company_id.exact_domain
+            print("base_urlllllllllll", base_url)
             base_url += '/web#id=%d&view_type=form&model=%s' % (
                 self.id, self._name
             )
@@ -426,7 +429,7 @@ class CRMLead(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "proposal.action.wizard",
             "domain": [('attachment_ids', 'in', record.attachment_ids.ids)],
-            "view_mode": "tree"
+            "view_mode": "list"
         }
 
     def action_agreement(self):
@@ -470,6 +473,7 @@ class CRMLead(models.Model):
                 "view_mode": "form"
             }
         else:
+            print("jjjjjjjjjj", documents, model_info)
             self.env['docusign.send'].document_status(documents, model_info)
 
             if self.complete_document == 'completed':
@@ -505,6 +509,7 @@ class CRMLead(models.Model):
         """ To View the Completed SOW document"""
         self.account_id = self.env['docusign.credentials'].search([], limit=1)
         documents = self
+        print("lklklklklkkl", self._inherit)
 
         if len(documents) == 0:
             documents = self.search([])
@@ -520,7 +525,7 @@ class CRMLead(models.Model):
                 "view_mode": "form"
             }
         else:
-            self.env['docusign.send'].sow_document_status(documents, model_info)
+            print("jjjjjjjjjjjj", documents, model_info)
 
             if self.sow_complete_document == 'completed':
                 return {

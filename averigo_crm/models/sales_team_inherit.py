@@ -39,7 +39,3 @@ class CrmTeamInherit(models.Model):
 
         action['context'] = action_context
         return action
-
-
-
-

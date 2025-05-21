@@ -21,7 +21,7 @@
                 <field name="check" id='check' invisible="1"/>
                 <br/><br/>
 
-                <field name="file" string="Document_preview" filename="file_name" widget="pdf_viewer_edit"/>
+                <field name="file" string="Document preview" filename="file_name" widget="pdf_viewer_edit"/>
                 <field name="file_name" invisible="1"/>
                 <footer>
                     <button name="send_documents" type="object"

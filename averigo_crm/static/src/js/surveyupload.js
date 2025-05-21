@@ -9,8 +9,8 @@ publicWidget.registry.SurveyFormUpload = publicWidget.Widget.extend(SurveyPreloa
             'change .o_survey_upload_file': '_onFileChange',
         },
         init() {
+            console.log("Inittttttt")
             this._super(...arguments);
-            this.rpc = this.bindService("rpc");
         },
         /** On adding file function */
         _onFileChange: function(event) {

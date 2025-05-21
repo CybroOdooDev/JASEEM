@@ -15,11 +15,17 @@ class MailActivityInherit(models.Model):
     @api.model
     def _default_activity_type_for_model(self, model):
         activity_type_model = self.env['mail.activity.type'].search(
-            [('res_model', '=', model), ('company_id', '=', self.company_id.id)], limit=1)
+            [('res_model', '=', model),
+             ('company_id', '=', self.company_id.id)],
+            limit=1
+        )
         if activity_type_model:
             return activity_type_model
         activity_type_generic = self.env['mail.activity.type'].search(
-            [('res_model', '=', False), ('company_id', '=', self.company_id.id)], limit=1)
+            [('res_model', '=', False),
+             ('company_id', '=', self.company_id.id)],
+            limit=1
+        )
         return activity_type_generic
 
     def _default_company_id(self):
@@ -32,25 +38,38 @@ class MailActivityInherit(models.Model):
             return False
 
         current_model = self.env["ir.model"].sudo().browse(
-            default_vals['res_model_id']).model
+            default_vals['res_model_id']
+        ).model
         return self._default_activity_type_for_model(current_model)
 
     base_url = fields.Char('Survey Url')
     crm_id = fields.Many2one('crm.lead')
     activity_type_multi_id = fields.Many2one(
-        'mail.activity.type', string='Activity Type',
-        ondelete='restrict')
+        'mail.activity.type',
+        string='Activity Type',
+        ondelete='restrict'
+    )
     user_id = fields.Many2one(
-        'res.users', 'Assigned to',
+        'res.users',
+        'Assigned to',
         default=lambda self: self.env.user,
         domain=_domain_user_id,
-        index=True, required=True)
-    company_id = fields.Many2one('res.company', required=True,
-                                 default=_default_company_id)
+        index=True,
+        required=True
+    )
+    company_id = fields.Many2one(
+        'res.company',
+        required=True,
+        default=_default_company_id
+    )
     activity_type_id = fields.Many2one(
-        'mail.activity.type', string='Activity Type',
-        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model), ('company_id', '=', company_id)]",
-        ondelete='restrict', default=_default_activity_type)
+        'mail.activity.type',
+        string='Activity Type',
+        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model), "
+               "('company_id', '=', company_id)]",
+        ondelete='restrict',
+        default=_default_activity_type
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -60,7 +79,8 @@ class MailActivityInherit(models.Model):
         if any(user != self.env.user for user in activities.user_id):
             user_partners = activities.user_id.partner_id
             readable_user_partners = user_partners._filter_access_rules_python(
-                'read')
+                'read'
+            )
         else:
             readable_user_partners = self.env.user.partner_id
 
@@ -69,10 +89,12 @@ class MailActivityInherit(models.Model):
             activities_to_notify = self.env['mail.activity']
         else:
             activities_to_notify = activities.filtered(
-                lambda act: act.user_id == self.env.user)
+                lambda act: act.user_id == self.env.user
+            )
         if activities_to_notify:
-            to_sudo = activities_to_notify.filtered(lambda
-                                                        act: act.user_id.partner_id not in readable_user_partners)
+            to_sudo = activities_to_notify.filtered(
+                lambda act: act.user_id.partner_id not in readable_user_partners
+            )
             other = activities_to_notify - to_sudo
             to_sudo.sudo().action_notify()
             other.action_notify()
@@ -87,27 +109,34 @@ class MailActivityInherit(models.Model):
                 else:
                     per_user[activity.user_id].append(activity.res_id)
             for user, res_ids in per_user.items():
-                pids = user.partner_id.ids if user.partner_id in readable_user_partners else user.sudo().partner_id.ids
+                pids = (
+                    user.partner_id.ids if user.partner_id in readable_user_partners
+                    else user.sudo().partner_id.ids)
                 self.env[model].browse(res_ids).message_subscribe(
-                    partner_ids=pids)
+                    partner_ids=pids
+                )
 
         # send notifications about activity creation
         todo_activities = activities.filtered(
-            lambda act: act.date_deadline <= fields.Date.today())
+            lambda act: act.date_deadline <= fields.Date.today()
+        )
         if todo_activities:
-            self.env['bus.bus']._sendmany([
-                (activity.user_id.partner_id, 'mail.activity/updated',
-                 {'activity_created': True})
-                for activity in todo_activities
-            ])
+            self.env['bus.bus']._sendone(
+                activity.user_id.partner_id,  # recipient
+                'mail.activity/updated',  # notification_type
+                {'activity_created': True}  # message
+            )
         return activities
 
     def action_close_dialog(self):
         if self.res_model == 'crm.lead':
             self.crm_id = self.res_id
-            if self.activity_type_id.name == 'Site Survey' and self.crm_id.stage_id.name == "New" and self.crm_id.type == 'opportunity':
+            if (self.activity_type_id.name == 'Site Survey' and
+                    self.crm_id.stage_id.name == "New" and
+                    self.crm_id.type == 'opportunity'):
                 self.crm_id.stage_id = self.env.ref(
-                    'averigo_crm.stage_lead02').id
+                    'averigo_crm.stage_lead02'
+                ).id
                 users = [self.user_id.id]
                 self.crm_id.message_subscribe(users)
             return {
@@ -120,10 +149,12 @@ class MailActivityInherit(models.Model):
             self.crm_id = self.res_id
             self.crm_id.activity_id = self.id
             survey_temp_id = self.activity_type_id.survey_template_id.id
-            survey = self.env['survey.survey'].sudo().search(
-                [('id', '=', survey_temp_id)])
+            survey = self.env['survey.survey'].sudo().browse(survey_temp_id)
             url = survey.get_start_url()
-            self.base_url = url + '?res_id=%d' % self.res_id
+            print("surveyyyyyyyyyyy", survey)
+            print("url", url)
+            print("sessionnnnnnn", survey.session_link)
+            self.base_url = f"{self.env['ir.config_parameter'].get_param('web.base.url')}{url}"
             if not self:
                 return
             for activity in self:
@@ -132,9 +163,57 @@ class MailActivityInherit(models.Model):
                     activity = activity.with_context(lang=activity.user_id.lang)
 
                 model_description = activity.env['ir.model']._get(
-                    activity.res_model).display_name
+                    activity.res_model
+                ).display_name
+
+                print("activityyyyyyyyyyyy", activity.read())
+
                 body = activity.env['ir.qweb']._render(
                     'averigo_crm.message_survey_assigned',
+                    {
+                        "session_link": self.base_url,
+                        'activity': activity,
+                        'model_description': model_description,
+                        'is_html_empty': is_html_empty,
+                    },
+                    minimal_qcontext=True
+                )
+                record = activity.env[activity.res_model].browse(
+                    activity.res_id
+                )
+                if activity.user_id:
+                    record.message_notify(
+                        partner_ids=activity.user_id.partner_id.ids,
+                        body=body,
+                        record_name=activity.res_name,
+                        model_description=model_description,
+                        email_layout_xmlid=False,
+                        subject=_(
+                            '"%(activity_name)s: %(summary)s" assigned to you',
+                            activity_name=activity.res_name,
+                            summary=activity.summary or activity.activity_type_id.name
+                        ),
+                        subtitles=[
+                            _('Activity: %s', activity.activity_type_id.name),
+                            _('Deadline: %s',
+                              activity.date_deadline.strftime(
+                                  get_lang(activity.env).date_format
+                              ))
+                        ]
+                    )
+        else:
+            if not self:
+                return
+            for activity in self:
+                if activity.user_id.lang:
+                    # Send notification in the assigned user's language
+                    activity = activity.with_context(lang=activity.user_id.lang)
+
+                model_description = activity.env['ir.model']._get(
+                    activity.res_model
+                ).display_name
+                body = activity.env['ir.qweb']._render(
+                    'mail.message_activity_assigned',
                     {
                         'activity': activity,
                         'model_description': model_description,
@@ -150,44 +229,19 @@ class MailActivityInherit(models.Model):
                         body=body,
                         record_name=activity.res_name,
                         model_description=model_description,
-                        email_layout_xmlid=False,
-                        subject=_('"%(activity_name)s: %(summary)s" assigned to you',
-                                  activity_name=activity.res_name,
-                                  summary=activity.summary or activity.activity_type_id.name),
-                        subtitles=[_('Activity: %s', activity.activity_type_id.name),
-                                   _('Deadline: %s', activity.date_deadline.strftime(get_lang(activity.env).date_format))]
-                    )
-        else:
-            if not self:
-                return
-            for activity in self:
-                if activity.user_id.lang:
-                    # Send the notification in the assigned user's language
-                    activity = activity.with_context(lang=activity.user_id.lang)
-
-                model_description = activity.env['ir.model']._get(activity.res_model).display_name
-                body = activity.env['ir.qweb']._render(
-                    'mail.message_activity_assigned',
-                    {
-                        'activity': activity,
-                        'model_description': model_description,
-                        'is_html_empty': is_html_empty,
-                    },
-                    minimal_qcontext=True
-                )
-                record = activity.env[activity.res_model].browse(activity.res_id)
-                if activity.user_id:
-                    record.message_notify(
-                        partner_ids=activity.user_id.partner_id.ids,
-                        body=body,
-                        record_name=activity.res_name,
-                        model_description=model_description,
                         email_layout_xmlid='mail.mail_notification_layout',
-                        subject=_('"%(activity_name)s: %(summary)s" assigned to you',
-                                  activity_name=activity.res_name,
-                                  summary=activity.summary or activity.activity_type_id.name),
-                        subtitles=[_('Activity: %s', activity.activity_type_id.name),
-                                   _('Deadline: %s', activity.date_deadline.strftime(get_lang(activity.env).date_format))]
+                        subject=_(
+                            '"%(activity_name)s: %(summary)s" assigned to you',
+                            activity_name=activity.res_name,
+                            summary=activity.summary or activity.activity_type_id.name
+                        ),
+                        subtitles=[
+                            _('Activity: %s', activity.activity_type_id.name),
+                            _('Deadline: %s',
+                              activity.date_deadline.strftime(
+                                  get_lang(activity.env).date_format
+                              ))
+                        ]
                     )
 
 
@@ -197,40 +251,56 @@ class MailActivityType(models.Model):
     def _default_survey(self):
         """ to return default survey template"""
         survey = self.env['survey.survey'].sudo().search(
-            [('title', '=', 'Grabscango Site Survey')])
+            [('title', '=', 'Grabscango Site Survey')]
+        )
         return survey
 
-    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
-    survey_template_id = fields.Many2one('survey.survey',
-                                         string='Survey templates',
-                                         default=_default_survey)
+    is_site_survey = fields.Boolean(string="is_site_survey")
+
+    company_id = fields.Many2one(
+        'res.company',
+        required=True,
+        default=lambda self: self.env.company
+    )
+    survey_template_id = fields.Many2one(
+        'survey.survey',
+        string='Survey templates',
+        default=_default_survey
+    )
 
 
 class MailThread(models.AbstractModel):
     _inherit = 'mail.thread'
 
     def _notify_get_recipients(self, message, msg_vals, **kwargs):
-        """ override the function to get mail for current user if the assignee is current user"""
+        """
+        Override the function to get mail for current user if the assignee
+        is current user
+        """
         msg_sudo = message.sudo()
         # get values from msg_vals or from message if msg_vals doen't exists
-        pids = msg_vals.get('partner_ids',
-                            []) if msg_vals else msg_sudo.partner_ids.ids
-        message_type = msg_vals.get(
-            'message_type') if msg_vals else msg_sudo.message_type
-        subtype_id = msg_vals.get(
-            'subtype_id') if msg_vals else msg_sudo.subtype_id.id
+        pids = (msg_vals.get('partner_ids', []) if msg_vals
+                else msg_sudo.partner_ids.ids)
+        message_type = (msg_vals.get('message_type') if msg_vals
+                        else msg_sudo.message_type)
+        subtype_id = (msg_vals.get('subtype_id') if msg_vals
+                      else msg_sudo.subtype_id.id)
         # is it possible to have record but no subtype_id ?
         recipients_data = []
 
-        res = self.env['mail.followers']._get_recipient_data(self, message_type,
-                                                             subtype_id, pids)[
-            self.id if self else 0]
+        res = self.env['mail.followers']._get_recipient_data(
+            self,
+            message_type,
+            subtype_id,
+            pids
+        )[self.id if self else 0]
+
         if not res:
             return recipients_data
 
         # notify author of its own messages, False by default
-        notify_author = kwargs.get('notify_author') or self.env.context.get(
-            'mail_notify_author')
+        notify_author = (kwargs.get('notify_author') or
+                         self.env.context.get('mail_notify_author'))
         real_author_id = False
         if not notify_author:
             if self.env.user.active:
@@ -264,4 +334,3 @@ class MailThread(models.AbstractModel):
         print(recipients_data)
 
         return recipients_data
-

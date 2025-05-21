@@ -7,7 +7,8 @@ from odoo.exceptions import UserError
 class SurveyInherit(models.Model):
     _inherit = "survey.survey"
 
-    def _create_answer(self, user=False, partner=False, email=False, res_id=None,
+    def _create_answer(self, user=False, partner=False, email=False,
+                       res_id=None,
                        test_entry=False, check_attempts=True,
                        **additional_vals):
         self.check_access_rights('read')
@@ -91,7 +92,8 @@ class MergeSurveyData(models.Model):
 
     lead_id = fields.Many2one('crm.lead')
 
-    def _save_lines(self, question, answer, comment=None, overwrite_existing=True):
+    def _save_lines(self, question, answer, comment=None,
+                    overwrite_existing=True):
         """ Save answers to questions, depending on question type.
 
         :param bool overwrite_existing: if an answer already exists for question and user_input_id
@@ -105,7 +107,8 @@ class MergeSurveyData(models.Model):
         if old_answers and not overwrite_existing:
             raise UserError(_("This answer cannot be overwritten."))
 
-        if question.question_type in ['char_box', 'text_box', 'numerical_box', 'date', 'datetime']:
+        if question.question_type in ['char_box', 'text_box', 'numerical_box',
+                                      'date', 'datetime']:
             self._save_line_simple_answer(question, old_answers, answer)
             if question.save_as_email and answer:
                 self.write({'email': answer})
@@ -119,7 +122,8 @@ class MergeSurveyData(models.Model):
         elif question.question_type == 'images':
             self._save_line_images(question, old_answers, answer, comment)
         else:
-            raise AttributeError(question.question_type + ": This type of question has no saving function")
+            raise AttributeError(
+                question.question_type + ": This type of question has no saving function")
 
     @api.model
     def _save_line_images(self, question, old_answers, answer, comment):
@@ -130,7 +134,9 @@ class MergeSurveyData(models.Model):
             'skipped': False
         }
         vals.update({'file_type': 'image'})
-        if answer[0] != '':
+
+        print("answerrrrrrrrrrrrrrrrrrrr", answer)
+        if answer and answer[0] != '':
             file = answer[0][0]
         else:
             file = None
@@ -142,6 +148,7 @@ class MergeSurveyData(models.Model):
             old_answers.write(vals)
             return old_answers
         else:
+            print("valssssssssssss", vals)
             return self.env['survey.user_input.line'].create(vals)
 
 

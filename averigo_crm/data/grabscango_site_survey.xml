@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Survey Definition -->
+        <record id="survey_grabscango_site" model="survey.survey">
+            <field name="title">Grabscango Site Survey</field>
+            <field name="description">This survey collects site information for
+                Grabscango installations.
+            </field>
+            <field name="active" eval="True"/>
+            <field name="access_mode">public</field>
+            <field name="users_login_required" eval="False"/>
+            <field name="users_can_go_back" eval="True"/>
+            <field name="questions_layout">one_page</field>
+            <field name="questions_selection">all</field>
+            <field name="progression_mode">percent</field>
+            <field name="scoring_type">no_scoring</field>
+        </record>
+
+        <!-- Page 1: Survey and Client Information -->
+        <record id="page_survey_client_info" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="title">Survey and Client Information</field>
+            <field name="is_page" eval="True"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="question_survey_date" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_survey_client_info"/>
+            <field name="title">Survey Date</field>
+            <field name="question_type">date</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="question_surveyors_name" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_survey_client_info"/>
+            <field name="title">Surveyors Name</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="question_surveyors_email" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_survey_client_info"/>
+            <field name="title">Surveyors Email</field>
+            <field name="question_type">char_box</field>
+            <field name="validation_email" eval="True"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="question_client_name" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_survey_client_info"/>
+            <field name="title">Client Name</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="question_site_number" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_survey_client_info"/>
+            <field name="title">Site Number</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="question_number_rooms" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_survey_client_info"/>
+            <field name="title">Number of Rooms</field>
+            <field name="question_type">numerical_box</field>
+            <field name="validation_min_float_value">0</field>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="question_street_address" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_survey_client_info"/>
+            <field name="title">Street Address</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="question_site_city" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_survey_client_info"/>
+            <field name="title">Site City</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">9</field>
+        </record>
+
+        <record id="question_site_state" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_survey_client_info"/>
+            <field name="title">Site State</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="question_site_zip" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_survey_client_info"/>
+            <field name="title">Site Zip</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">11</field>
+        </record>
+
+        <record id="question_site_contact_name" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_survey_client_info"/>
+            <field name="title">Site Contact Name</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">12</field>
+        </record>
+
+        <record id="question_site_contact_phone" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_survey_client_info"/>
+            <field name="title">Site Contact Phone Number</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">13</field>
+        </record>
+
+        <!-- Page 2: Operator Information -->
+        <record id="page_operator_info" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="title">Operator Information</field>
+            <field name="is_page" eval="True"/>
+            <field name="sequence">14</field>
+        </record>
+
+        <record id="question_operator_name" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_operator_info"/>
+            <field name="title">Operator Name</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">15</field>
+        </record>
+
+        <record id="question_operator_street_address" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_operator_info"/>
+            <field name="title">Operator Street Address</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">16</field>
+        </record>
+
+        <record id="question_operator_city" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_operator_info"/>
+            <field name="title">Operator City</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">17</field>
+        </record>
+
+        <record id="question_operator_state" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_operator_info"/>
+            <field name="title">Operator State</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">18</field>
+        </record>
+
+        <record id="question_operator_zip" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_operator_info"/>
+            <field name="title">Operator Zip</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">19</field>
+        </record>
+
+        <record id="question_operator_contact_name" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_operator_info"/>
+            <field name="title">Operator Contact Name</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="question_operator_contact_phone" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_operator_info"/>
+            <field name="title">Operator Contact Phone Number</field>
+            <field name="question_type">char_box</field>
+            <field name="sequence">21</field>
+        </record>
+
+        <!-- Page 3: Area Location & Dimensions -->
+        <record id="page_area_location_dimensions" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="title">Area Location &amp; Dimensions</field>
+            <field name="is_page" eval="True"/>
+            <field name="sequence">22</field>
+        </record>
+
+        <record id="question_area_location" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_area_location_dimensions"/>
+            <field name="title">Area Location</field>
+            <field name="question_type">simple_choice</field>
+            <field name="sequence">23</field>
+        </record>
+
+        <!-- Suggested Answers for Area Location -->
+        <record id="answer_area_location_lobby" model="survey.question.answer">
+            <field name="question_id" ref="question_area_location"/>
+            <field name="value">Lobby</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="answer_area_location_dedicated_room"
+                model="survey.question.answer">
+            <field name="question_id" ref="question_area_location"/>
+            <field name="value">Dedicated Room</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="question_wall_1_length" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_area_location_dimensions"/>
+            <field name="title">Wall 1 Length (inches)</field>
+            <field name="question_type">numerical_box</field>
+            <field name="validation_min_float_value">0</field>
+            <field name="sequence">24</field>
+        </record>
+
+        <record id="question_wall_1_width" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_area_location_dimensions"/>
+            <field name="title">Wall 1 Width (inches)</field>
+            <field name="question_type">numerical_box</field>
+            <field name="validation_min_float_value">0</field>
+            <field name="sequence">25</field>
+        </record>
+
+        <record id="question_wall_1_height" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_area_location_dimensions"/>
+            <field name="title">Wall 1 Height (inches)</field>
+            <field name="question_type">numerical_box</field>
+            <field name="validation_min_float_value">0</field>
+            <field name="sequence">26</field>
+        </record>
+
+        <record id="question_wall_2_length" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_area_location_dimensions"/>
+            <field name="title">Wall 2 Length (inches)</field>
+            <field name="question_type">numerical_box</field>
+            <field name="validation_min_float_value">0</field>
+            <field name="sequence">27</field>
+        </record>
+
+        <record id="question_wall_2_width" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_area_location_dimensions"/>
+            <field name="title">Wall 2 Width (inches)</field>
+            <field name="question_type">numerical_box</field>
+            <field name="validation_min_float_value">0</field>
+            <field name="sequence">28</field>
+        </record>
+
+        <record id="question_wall_2_height" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_area_location_dimensions"/>
+            <field name="title">Wall 2 Height (inches)</field>
+            <field name="question_type">numerical_box</field>
+            <field name="validation_min_float_value">0</field>
+            <field name="sequence">29</field>
+        </record>
+
+        <record id="question_wall_3_length" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_area_location_dimensions"/>
+            <field name="title">Wall 3 Length (inches)</field>
+            <field name="question_type">numerical_box</field>
+            <field name="validation_min_float_value">0</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="question_wall_3_width" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_area_location_dimensions"/>
+            <field name="title">Wall 3 Width (inches)</field>
+            <field name="question_type">numerical_box</field>
+            <field name="validation_min_float_value">0</field>
+            <field name="sequence">31</field>
+        </record>
+
+        <record id="question_wall_3_height" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_area_location_dimensions"/>
+            <field name="title">Wall 3 Height (inches)</field>
+            <field name="question_type">numerical_box</field>
+            <field name="validation_min_float_value">0</field>
+            <field name="sequence">32</field>
+        </record>
+
+        <!-- Page 4: Additional Info -->
+        <record id="page_additional_info" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="title">Additional Info</field>
+            <field name="is_page" eval="True"/>
+            <field name="sequence">33</field>
+        </record>
+
+        <record id="question_ethernet_available" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_additional_info"/>
+            <field name="title">Is Ethernet available for self-checkout
+                terminal?
+            </field>
+            <field name="question_type">simple_choice</field>
+            <field name="sequence">34</field>
+        </record>
+
+        <!-- Suggested Answers for Ethernet Availability -->
+        <record id="answer_ethernet_yes" model="survey.question.answer">
+            <field name="question_id" ref="question_ethernet_available"/>
+            <field name="value">Yes</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="answer_ethernet_no" model="survey.question.answer">
+            <field name="question_id" ref="question_ethernet_available"/>
+            <field name="value">No</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="question_wifi_available" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_additional_info"/>
+            <field name="title">Is WiFi available for self-checkout terminal?
+            </field>
+            <field name="question_type">simple_choice</field>
+            <field name="sequence">35</field>
+        </record>
+
+        <!-- Suggested Answers for WiFi Availability -->
+        <record id="answer_wifi_yes" model="survey.question.answer">
+            <field name="question_id" ref="question_wifi_available"/>
+            <field name="value">Yes</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="answer_wifi_no" model="survey.question.answer">
+            <field name="question_id" ref="question_wifi_available"/>
+            <field name="value">No</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="question_alcohol_sales" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_additional_info"/>
+            <field name="title">Will there be alcohol sales?</field>
+            <field name="question_type">simple_choice</field>
+            <field name="sequence">36</field>
+        </record>
+
+        <!-- Suggested Answers for Alcohol Sales -->
+        <record id="answer_alcohol_yes" model="survey.question.answer">
+            <field name="question_id" ref="question_alcohol_sales"/>
+            <field name="value">Yes</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="answer_alcohol_no" model="survey.question.answer">
+            <field name="question_id" ref="question_alcohol_sales"/>
+            <field name="value">No</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="question_laundry_toiletry_sales" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_additional_info"/>
+            <field name="title">Do they wish to sell laundry &amp; toiletry
+                supplies?
+            </field>
+            <field name="question_type">simple_choice</field>
+            <field name="sequence">37</field>
+        </record>
+
+        <!-- Suggested Answers for Laundry & Toiletry Sales -->
+        <record id="answer_laundry_yes" model="survey.question.answer">
+            <field name="question_id" ref="question_laundry_toiletry_sales"/>
+            <field name="value">Yes</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="answer_laundry_no" model="survey.question.answer">
+            <field name="question_id" ref="question_laundry_toiletry_sales"/>
+            <field name="value">No</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <!-- Page 5: Comments -->
+        <record id="page_comments" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="title">Comments</field>
+            <field name="is_page" eval="True"/>
+            <field name="sequence">38</field>
+        </record>
+
+        <record id="question_comments" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_comments"/>
+            <field name="title">Additional Comments</field>
+            <field name="question_type">text_box</field>
+            <field name="sequence">39</field>
+        </record>
+
+        <!-- Page 6: Photos (Placeholder) -->
+        <record id="page_photos" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="title">Photos( Attachments .PNG)</field>
+            <field name="is_page" eval="True"/>
+            <field name="sequence">40</field>
+        </record>
+
+        <record id="question_photo_instructions_1" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_photos"/>
+            <field name="title">Image1
+            </field>
+            <field name="question_type">images</field>
+            <field name="sequence">41</field>
+        </record>
+
+
+        <record id="question_photo_instructions_2" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_photos"/>
+            <field name="title">Image2
+            </field>
+            <field name="question_type">images</field>
+            <field name="sequence">42</field>
+        </record>
+
+
+        <record id="question_photo_instructions_3" model="survey.question">
+            <field name="survey_id" ref="survey_grabscango_site"/>
+            <field name="page_id" ref="page_photos"/>
+            <field name="title">Image2
+            </field>
+            <field name="question_type">images</field>
+            <field name="sequence">43</field>
+        </record>
+
+
+    </data>
+</odoo>

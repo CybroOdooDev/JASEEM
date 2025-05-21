@@ -9,7 +9,8 @@ class CRMLeadStatus(models.Model):
     _description = "CRM Lead Status"
 
     name = fields.Char("Status")
-    company_id = fields.Many2one('res.company', string="Operator", default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', string="Operator",
+                                 default=lambda self: self.env.company)
     active = fields.Boolean(string="Active", default=True)
 
 
