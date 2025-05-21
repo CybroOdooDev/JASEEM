@@ -14,6 +14,7 @@ publicWidget.registry.SurveyFormUpload = publicWidget.Widget.extend(SurveyPreloa
         },
         /** On adding file function */
         _onFileChange: function(event) {
+            console.log("onFileChange", event);
             var self = this;
             var files = event.target.files;
             var fileNames = [];
@@ -28,6 +29,8 @@ publicWidget.registry.SurveyFormUpload = publicWidget.Widget.extend(SurveyPreloa
                     dataURLs.push(dataURL);
                     /**  Set the data-oe-data and data-oe-file_name attributes of the input element self call el */
                     var $input = $(event.currentTarget)
+                    console.log("asasasaassaasassaa",JSON.stringify(dataURLs))
+                    console.log("asasasaassaasassaa",JSON.stringify(fileNames))
                     $input.attr('data-oe-data', JSON.stringify(dataURLs));
                     $input.attr('data-oe-file_name', JSON.stringify(fileNames));
                     }

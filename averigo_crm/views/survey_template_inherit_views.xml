@@ -1,28 +1,277 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <!-- A page -->
+    <template id="survey_question" inherit_id="survey.question_container"
+              name="survey_question">
+        <xpath expr="//div[contains(@t-attf-class,'js_question-wrapper')]"
+               position="replace">
+            <t t-set="width" t-value="question.width"/>
+            <t t-if="width == 'thrice_width'">
+                <div t-attf-class="js_question-wrapper pb-4
+                           #{'d-none' if not display_question else ''}"
+                     t-att-id="question.id"
+                     t-att-data-required="bool(question.constr_mandatory and (not survey.users_can_go_back or survey.questions_layout == 'one_page')) or None"
+                     t-att-data-constr-error-msg="question.constr_error_msg or default_constr_error_msg if question.constr_mandatory else None"
+                     t-att-data-validation-error-msg="question.validation_error_msg or default_validation_error_msg if question.validation_required else None"
+                     style="width: 33%; float: left">
+                    <div class="mb-4">
+                        <h3 t-if="not hide_question_title">
+                            <span t-field='question.title' class="text-break"/>
+                            <span t-if="question.constr_mandatory"
+                                  class="text-danger">*
+                            </span>
+                        </h3>
+                        <div t-if="not is_html_empty(question.description)"
+                             t-field='question.description'
+                             class="text-muted oe_no_empty mt-1 text-break"/>
+                    </div>
+                    <t t-if="question.question_type == 'text_box'"
+                       t-call="survey.question_text_box"/>
+                    <t t-if="question.question_type == 'char_box'"
+                       t-call="survey.question_char_box"/>
+                    <t t-if="question.question_type == 'numerical_box'"
+                       t-call="survey.question_numerical_box"/>
+                    <t t-if="question.question_type == 'date'"
+                       t-call="survey.question_date"/>
+                    <t t-if="question.question_type == 'datetime'"
+                       t-call="survey.question_datetime"/>
+                    <t t-if="question.question_type == 'simple_choice'"
+                       t-call="survey.question_simple_choice"/>
+                    <t t-if="question.question_type == 'multiple_choice'"
+                       t-call="survey.question_multiple_choice"/>
+                    <t t-if="question.question_type == 'matrix'"
+                       t-call="survey.question_matrix"/>
+                    <t t-if="question.question_type == 'images'">
+                        <t t-call="averigo_crm.images"/>
+                    </t>
+                    <div t-attf-class="o_survey_question_error d-flex align-items-center justify-content-between overflow-hidden
+                 border-0 py-0 px-3 alert alert-danger #{'slide_in' if is_skipped_question else ''}"
+                         role="alert">
+                        <span t-if="is_skipped_question"
+                              t-out="question.constr_error_msg or default_constr_error_msg"/>
+                    </div>
+                </div>
+            </t>
+            <t t-elif="width == 'half_width'">
+                <div t-attf-class="js_question-wrapper pb-4
+                           #{'d-none' if not display_question else ''}"
+                     t-att-id="question.id"
+                     t-att-data-required="bool(question.constr_mandatory and (not survey.users_can_go_back or survey.questions_layout == 'one_page')) or None"
+                     t-att-data-constr-error-msg="question.constr_error_msg or default_constr_error_msg if question.constr_mandatory else None"
+                     t-att-data-validation-error-msg="question.validation_error_msg or default_validation_error_msg if question.validation_required else None"
+                     style="width: 50%; float: left">
+                    <div class="mb-4">
+                        <h3 t-if="not hide_question_title">
+                            <span t-field='question.title' class="text-break"/>
+                            <span t-if="question.constr_mandatory"
+                                  class="text-danger">*
+                            </span>
+                        </h3>
+                        <div t-if="not is_html_empty(question.description)"
+                             t-field='question.description'
+                             class="text-muted oe_no_empty mt-1 text-break"/>
+                    </div>
+                    <t t-if="question.question_type == 'text_box'"
+                       t-call="survey.question_text_box"/>
+                    <t t-if="question.question_type == 'char_box'"
+                       t-call="survey.question_char_box"/>
+                    <t t-if="question.question_type == 'numerical_box'"
+                       t-call="survey.question_numerical_box"/>
+                    <t t-if="question.question_type == 'date'"
+                       t-call="survey.question_date"/>
+                    <t t-if="question.question_type == 'datetime'"
+                       t-call="survey.question_datetime"/>
+                    <t t-if="question.question_type == 'simple_choice'"
+                       t-call="survey.question_simple_choice"/>
+                    <t t-if="question.question_type == 'multiple_choice'"
+                       t-call="survey.question_multiple_choice"/>
+                    <t t-if="question.question_type == 'matrix'"
+                       t-call="survey.question_matrix"/>
+                    <t t-if="question.question_type == 'images'">
+                        <t t-call="averigo_crm.images"/>
+                    </t>
+                    <div t-attf-class="o_survey_question_error d-flex align-items-center justify-content-between overflow-hidden
+                 border-0 py-0 px-3 alert alert-danger #{'slide_in' if is_skipped_question else ''}"
+                         role="alert">
+                        <span t-if="is_skipped_question"
+                              t-out="question.constr_error_msg or default_constr_error_msg"/>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <div t-attf-class="js_question-wrapper pb-4
+                           #{'d-none' if not display_question else ''}
+                           #{'me-2' if extra_right_margin else ''}"
+                     t-att-id="question.id"
+                     t-att-data-required="bool(question.constr_mandatory and (not survey.users_can_go_back or survey.questions_layout == 'one_page')) or None"
+                     t-att-data-constr-error-msg="question.constr_error_msg or default_constr_error_msg if question.constr_mandatory else None"
+                     t-att-data-validation-error-msg="question.validation_error_msg or default_validation_error_msg if question.validation_required else None"
+                >
+                    <div class="mb-4">
+                        <h3 t-if="not hide_question_title">
+                            <span t-field='question.title' class="text-break"/>
+                            <span t-if="question.constr_mandatory"
+                                  class="text-danger">*
+                            </span>
+                        </h3>
+                        <div t-if="not is_html_empty(question.description)"
+                             t-field='question.description'
+                             class="text-muted oe_no_empty mt-1 text-break"/>
+                    </div>
+                    <t t-if="question.question_type == 'text_box'"
+                       t-call="survey.question_text_box"/>
+                    <t t-if="question.question_type == 'char_box'"
+                       t-call="survey.question_char_box"/>
+                    <t t-if="question.question_type == 'numerical_box'"
+                       t-call="survey.question_numerical_box"/>
+                    <t t-if="question.question_type == 'date'"
+                       t-call="survey.question_date"/>
+                    <t t-if="question.question_type == 'datetime'"
+                       t-call="survey.question_datetime"/>
+                    <t t-if="question.question_type == 'simple_choice'"
+                       t-call="survey.question_simple_choice"/>
+                    <t t-if="question.question_type == 'multiple_choice'"
+                       t-call="survey.question_multiple_choice"/>
+                    <t t-if="question.question_type == 'matrix'"
+                       t-call="survey.question_matrix"/>
+                    <t t-if="question.question_type == 'images'">
+                        <t t-call="averigo_crm.images"/>
+                    </t>
+                    <div t-attf-class="o_survey_question_error d-flex align-items-center justify-content-between overflow-hidden
+                 border-0 py-0 px-3 alert alert-danger #{'slide_in' if is_skipped_question else ''}"
+                         role="alert">
+                        <span t-if="is_skipped_question"
+                              t-out="question.constr_error_msg or default_constr_error_msg"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
 
+    <template id="images" name="Images">
+        <input type="file"
+               class="form-control o_survey_upload_file"
+               t-att-name="question.id"
+               t-att-placeholder="question.question_placeholder" multiple="true"
+               accept="image/*" data-oe-data="" data-oe-file_name=""
+               t-att-data-question-type="question.question_type"/>
+    </template>
 
-    <template id="question_container_site_survey"
-              inherit_id="survey.question_container">
-        <xpath expr="//div[@t-att-id='question.id']"
+    <template id="survey_print" inherit_id="survey.survey_page_print"
+              name="survey_page">
+        <xpath expr="//div[hasclass('js_question-wrapper')]"
                position="inside">
             <t t-if="question.question_type == 'images'">
                 <t t-call="averigo_crm.images_print"/>
             </t>
-
         </xpath>
     </template>
 
     <template id="images_print" name="Images Print">
-        <div>
-
-            <input type="file" accept="image/*" id="imageUpload"
-                   name="imageUpload"/>
-
-        </div>
-
-
+        <t t-foreach="answer.user_input_line_ids" t-as="answers">
+            <t t-foreach="question.user_input_line_ids" t-as="questions">
+                <t t-if="answers.id == questions.id">
+                    <img t-att-src="image_data_uri(answers.value_images)"
+                         width="175" height="100"/>
+                </t>
+            </t>
+        </t>
     </template>
 
+    <template id="question_char_box_averigo"
+              inherit_id="survey.question_char_box" name="Text box">
+        <xpath expr="//input[hasclass('form-control')]" position="replace">
+            <t t-if="question.title == 'Survey Date'">
+                <input type="text"
+                       class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
+                       t-att-value="datetime.datetime.now().strftime('%%m-%%d-%%Y')"
+                       t-att-name="question.id"
+                       t-att-placeholder="question.question_placeholder"
+                       t-att-data-question-type="question.question_type"/>
+            </t>
+            <t t-elif="question.title == 'Operator Name' and answer.lead_id">
+                <input type="text"
+                       class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
+                       t-att-value="answer.lead_id.company_id.name"
+                       t-att-name="question.id"
+                       t-att-placeholder="question.question_placeholder"
+                       t-att-data-question-type="question.question_type"/>
+            </t>
+            <t t-elif="question.title == 'Operator Street Address' and answer.lead_id">
+                <input type="text"
+                       class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
+                       t-att-value="answer.lead_id.company_id.street"
+                       t-att-name="question.id"
+                       t-att-placeholder="question.question_placeholder"
+                       t-att-data-question-type="question.question_type"/>
+            </t>
+            <t t-elif="question.title == 'Operator City' and answer.lead_id ">
+                <input type="text"
+                       class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
+                       t-att-value="answer.lead_id.company_id.city"
+                       t-att-name="question.id"
+                       t-att-placeholder="question.question_placeholder"
+                       t-att-data-question-type="question.question_type"/>
+            </t>
+            <t t-elif="question.title == 'Operator State' and answer.lead_id ">
+                <input type="text"
+                       class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
+                       t-att-value="answer.lead_id.company_id.state_id.name"
+                       t-att-name="question.id"
+                       t-att-placeholder="question.question_placeholder"
+                       t-att-data-question-type="question.question_type"/>
+            </t>
+            <t t-elif="question.title == 'Operator Zip' and answer.lead_id ">
+                <input type="text"
+                       class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
+                       t-att-value="answer.lead_id.company_id.zip"
+                       t-att-name="question.id"
+                       t-att-placeholder="question.question_placeholder"
+                       t-att-data-question-type="question.question_type"/>
+            </t>
+            <t t-elif="question.title == 'Operator Contact Phone Number' and answer.lead_id ">
+                <input type="text"
+                       class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
+                       t-att-value="answer.lead_id.company_id.phone"
+                       t-att-name="question.id"
+                       t-att-placeholder="question.question_placeholder"
+                       t-att-data-question-type="question.question_type"/>
+            </t>
+            <t t-elif="question.title == 'Number of Rooms' and answer.lead_id">
+                <input type="text"
+                       class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
+                       t-att-value="answer.lead_id.no_of_rooms"
+                       t-att-name="question.id"
+                       t-att-placeholder="question.question_placeholder"
+                       t-att-data-question-type="question.question_type"/>
+            </t>
+            <t t-elif="question.title == 'Surveyors Name' and answer.lead_id.activity_id">
+                <input type="text"
+                       class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
+                       t-att-value="answer.lead_id.activity_id.user_id.name"
+                       t-att-name="question.id"
+                       t-att-placeholder="question.question_placeholder"
+                       t-att-data-question-type="question.question_type"/>
+            </t>
+            <t t-elif="question.title == 'Surveyors Email' and answer.lead_id.activity_id">
+                <input type="text"
+                       class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
+                       t-att-value="answer.lead_id.activity_id.user_id.partner_id.email"
+                       t-att-name="question.id"
+                       t-att-placeholder="question.question_placeholder"
+                       t-att-data-question-type="question.question_type"/>
+            </t>
+            <t t-else="">
+                <input t-att-type="'email' if question.validation_email else 'text'"
+                       class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
+                       t-att-name="question.id"
+                       t-att-placeholder="question.question_placeholder"
+                       t-att-value="answer_lines[0].value_char_box if answer_lines else None"
+                       t-att-data-question-type="question.question_type"
+                       t-att-data-validation-length-min="question.validation_length_min if question.validation_required else False"
+                       t-att-data-validation-length-max="question.validation_length_max if question.validation_required else False"/>
+            </t>
+        </xpath>
+    </template>
 
 </odoo>
