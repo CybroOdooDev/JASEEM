@@ -33,8 +33,8 @@
         "views/activity_events_views.xml",
         "wizard/proposal_action_views.xml",
         "wizard/agreement_action_views.xml",
-        "wizard/sow_action_wizard_views.xml",
-        "wizard/transfer_wizard_views.xml",
+        # "wizard/sow_action_wizard_views.xml",
+        # "wizard/transfer_wizard_views.xml",
         "views/res_company_views.xml",
     ],
     "assets": {

@@ -1,33 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-        <record id="averigo_crm_contact" model="ir.ui.view">
-            <field name="name">Averigo Customers</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="averigo_base_customer.res_partner_view_form_base_averigo"/>
-            <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                     <button class="oe_stat_button o_res_partner_tip_opp"
-                                type="object"
-                                name="open_my_opportunities" icon="fa-star">
-                            <field name="opportunity_count"
-                                   string="Opportunities" widget="statinfo"/>
-                        </button>
-<!--                     <button class="oe_stat_button o_res_partner_tip_act"-->
-<!--                                type="object"-->
-<!--                                name="open_my_activities" icon="fa-tasks">-->
-<!--                            <field name="mail_activities_cbutton_boxount"-->
-<!--                                   string="Planned Activities "-->
-<!--                                   widget="statinfo"/>-->
-<!--                        </button>-->
-                      <button class="oe_stat_button o_res_partner_tip_act"
-                                type="object"
-                                name="close_my_activities" icon="fa-tasks">
-                            <field name="close_activities_count"
-                                   string="Closed Activities"
-                                   widget="statinfo"/>
-                        </button>
-                </div>
-            </field>
-        </record>
+    <record id="res_partner_view_form_customer" model="ir.ui.view">
+        <field name="name">Averigo Customers</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id"
+               ref="averigo_base_customer.res_partner_view_form_customer"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button o_res_partner_tip_opp"
+                        type="object"
+                        name="open_my_opportunities" icon="fa-star">
+                    <field name="opportunity_count"
+                           string="Opportunities" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button o_res_partner_tip_act"
+                        type="object"
+                        name="close_my_activities" icon="fa-tasks">
+                    <field name="close_activities_count"
+                           string="Closed Activities"
+                           widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
 
 </odoo>
