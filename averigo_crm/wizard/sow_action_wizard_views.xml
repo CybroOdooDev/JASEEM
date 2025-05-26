@@ -23,9 +23,9 @@
                         <field name="file_name" invisible="1"/>
                     </p>
                 <footer>
-<!--                    <button name="send_sow" type="object" context="{'key': 0}"-->
-<!--                            string="Send SOW" invisible="check == False"-->
-<!--                            class="oe_highlight"/>-->
+                    <button name="send_sow" type="object" context="{'key': 0}"
+                            string="Send SOW" invisible="check == False"
+                            class="oe_highlight"/>
                     <button name="action_accept" string="Submit"
                             type="object" invisible="check == True"
                             default_focus="1"

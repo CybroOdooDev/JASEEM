@@ -341,9 +341,8 @@ class CRMLead(models.Model):
         if 'stage_id' in vals:
             base_url = self.env.user.company_id.exact_domain
             print("base_urlllllllllll", base_url)
-            base_url += '/web#id=%d&view_type=form&model=%s' % (
-                self.id, self._name
-            )
+            base_url = f"{base_url}/web#id={self.id}&view_type=form&model={self._name}"
+
             self.opportunity_url = base_url
 
             if self.team_id.user_ids:
@@ -493,6 +492,7 @@ class CRMLead(models.Model):
         """ Function To move to SOW Stage"""
         view_id = self.env.ref('averigo_crm.sow_action_wizard_view').id
         res_id = self.env['sow.action.wizard'].create({'crm': self.id})
+        print("res_id", res_id)
 
         return {
             'name': _("SOW"),
