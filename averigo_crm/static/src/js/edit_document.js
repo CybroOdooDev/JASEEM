@@ -115,6 +115,7 @@ export class EditPdfViewerField extends PdfViewerField {
                     select.style.top = `${y}px`;
 
                     // Handle select change event
+
                     select.addEventListener("change", function () {
                         const x_extra = z_doc * 1.34 - z_doc;
                         const y_extra = y_doc * 1.34 - y_doc;
@@ -165,8 +166,9 @@ export class EditPdfViewerField extends PdfViewerField {
                         // Call ORM to save data
 
                         const resId = self.props.record.evalContext.id;
+                        console.log("tabs1", self.tabs1);
                         console.log("zzzz", self.props.record.evalContext.id)
-                        self.orm.call("agreement.action.wizard", "get_json_data", [resId, this.tabs1]);
+                        self.orm.call("agreement.action.wizard", "get_json_data", [resId, self.tabs1]);
 
                         // Remove the select element after selection
                         select.remove();
