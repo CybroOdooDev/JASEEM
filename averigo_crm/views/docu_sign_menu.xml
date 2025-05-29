@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <menuitem id="odoo_docusign_connector.main_docusign_menu_root"
+              name="DocuSign" sequence="10"
+              groups="base_averigo.averigo_operator_user_group"/>
+
+</odoo>

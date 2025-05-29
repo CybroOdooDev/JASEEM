@@ -34,14 +34,10 @@ class AgreementActionWizard(models.TransientModel):
             self.check = True
         else:
             self.check = False
-
     @api.model
-    def get_json_data(self, res_id, tabs1):
+    def get_json_data(self, tabs1, res_id):
         """ To retrieve json from Agreement PDF"""
-
-        print("*********",tabs1)
         wiz = self.browse(res_id)
-
         wiz.data = tabs1
 
     def send_documents(self):

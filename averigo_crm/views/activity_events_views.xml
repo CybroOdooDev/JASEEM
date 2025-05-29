@@ -47,7 +47,7 @@
         </field>
     </record>
 
-     <record id="planned_activity_view_form" model="ir.ui.view">
+    <record id="planned_activity_view_form" model="ir.ui.view">
         <field name="name">planned.mail.activity.form</field>
         <field name="model">mail.activity</field>
         <field name="priority" eval="30"/>
@@ -69,30 +69,36 @@
         </field>
     </record>
 
-      <record id="ir_actions_view_activities" model="ir.actions.act_window">
-            <field name="name">Planned Activities</field>
-            <field name="res_model">mail.activity</field>
-            <field name="view_mode">list,form,kanban</field>
-            <field name="target">current</field>
-            <field name="domain">[]</field>
-            <!--            <field name="context">{'group_by':['partner_id']}</field>-->
-        </record>
+    <record id="ir_actions_view_activities" model="ir.actions.act_window">
+        <field name="name">Planned Activities</field>
+        <field name="res_model">mail.activity</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="target">current</field>
+        <field name="domain">[]</field>
+        <!--            <field name="context">{'group_by':['partner_id']}</field>-->
+    </record>
 
-     <record id="ir_actions_events" model="ir.actions.act_window">
-            <field name="name">Calendar Events</field>
-            <field name="res_model">calendar.event</field>
-            <field name="view_mode">list,form,kanban</field>
-            <field name="target">current</field>
-            <field name="domain">['|', ('user_id', '=', uid), ('create_uid', '=', uid)]</field>
-            <!--            <field name="context">{'group_by':['partner_id']}</field>-->
-        </record>
+    <record id="ir_actions_events" model="ir.actions.act_window">
+        <field name="name">Calendar Events</field>
+        <field name="res_model">calendar.event</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="target">current</field>
+        <field name="domain">['|', ('user_id', '=', uid), ('create_uid', '=',
+            uid)]
+        </field>
+        <!--            <field name="context">{'group_by':['partner_id']}</field>-->
+    </record>
 
     <menuitem id="crm.res_partner_menu_customer" name="Customers"
-                  action="averigo_base_customer.res_partner_operator_action" sequence="5"/>
+              parent="crm.crm_menu_sales"
+              action="averigo_base_customer.res_partner_operator_action"
+              sequence="5"/>
 
-     <menuitem id="ir_menu_view_activities_crm" action="ir_actions_view_activities" name="Planned Activities"
-                  parent="crm.crm_menu_root"/>
+    <menuitem id="ir_menu_view_activities_crm"
+              action="ir_actions_view_activities" name="Planned Activities"
+              parent="crm.crm_menu_root"/>
 
-    <menuitem id="ir_menu_view_events_crm" action="ir_actions_events" name="Calendar Events"
-                  parent="crm.crm_menu_root"/>
+    <menuitem id="ir_menu_view_events_crm" action="ir_actions_events"
+              name="Calendar Events"
+              parent="crm.crm_menu_root"/>
 </odoo>

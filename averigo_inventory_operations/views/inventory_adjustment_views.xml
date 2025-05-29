@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_inventory_filter" model="ir.ui.view">
+        <field name="name">stock.inventory.filter</field>
+        <field name="model">stock.inventory</field>
+        <field name="arch" type="xml">
+            <search string="Search Inventory">
+                <field name="name" string="Reference No"/>
+                <field name="product_ids" string="Product"
+                       filter_domain="['|', ('product_ids', 'ilike', ?), ('line_ids.product_id', 'ilike', ?)]"/>
+                <filter string="Draft" name="draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="In Progress" name="confirm"
+                        domain="[('state', '=', 'confirm')]"/>
+                <filter string="Validated" name="done"
+                        domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="Inventory Date" name="inventory_date"
+                        date="inventory_date"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="status" domain="[]"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Inventory Date" name="inventories_month"
+                            domain="[]" context="{'group_by': 'inventory_date'}"
+                            help="Physical Inventories by Date"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="view_inventory_tree" model="ir.ui.view">
+        <field name="name">stock.inventory.tree</field>
+        <field name="model">stock.inventory</field>
+        <field name="arch" type="xml">
+            <list string="Lot/Serial Number Inventory"
+                  decoration-muted="state == 'cancel'" delete="1">
+                <field name="inventory_date"/>
+                <field name="name" string="Reference No"/>
+                <field name="location_ids" widget="many2many_tags"
+                       optional="hide"
+                       groups="stock.group_stock_multi_locations"/>
+                <field name="product_ids" widget="many2many_tags"
+                       optional="hide"/>
+                <field name="state"/>
+                <field name="company_id" groups="base.group_multi_company"
+                       optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_inventory_form" model="ir.ui.view">
+        <field name="name">stock.inventory.form</field>
+        <field name="model">stock.inventory</field>
+        <field name="arch" type="xml">
+            <form string="Inventory Adjustment" delete="1">
+                <header>
+                    <button name="action_validate" string="Validate Inventory"
+                            type="object"
+                            invisible="state != 'confirm' or stock_lines_ids != []"
+                    />
+                    <button name="action_validate" string="Validate Inventory"
+                            type="object"
+                            invisible="state != 'confirm' or stock_lines_ids == []"
+                            class="btn-danger"
+                    />
+                    <button name="action_cancel_draft"
+                            invisible="state != 'cancel'" string="Set to Draft"
+                            type="object"/>
+                    <button name="action_cancel_draft"
+                            invisible="state != 'confirm'"
+                            string="Cancel Inventory" type="object"
+                            confirm="If you cancel this inventory adjustment, all its
+                                 inventory adjustment lines will be lost. Are you
+                                 sure you want to discard it ?"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirm,done"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="inventory_date"
+                                   widget="date"
+                                   default="context_today"
+                                   readonly="state != 'draft'"/>
+
+
+                            <field name="warehouse_id"
+                                   readonly="state != 'draft'"
+                                   options="{'no_create': True, 'no_open': True, 'no_create_edit':True}"
+                                   force_save="1" class="w-100"
+                                   required="1"/>
+
+
+                            <field name="scan_type" class="w-100"
+                                   readonly="state != 'draft'"/>
+
+                        </group>
+
+                        <group>
+                            <field name="prefill_counted_quantity"
+                                   widget="radio"
+                                   options="{'horizontal': true}"/>
+
+
+                            <field name="domain_for_bin_location_ids"
+                                   invisible="1"/>
+
+                            <field name="bin_location_ids"
+                                   options="{'no_create': True, 'no_create_edit':True}"
+                                   widget="many2many_tags" force_save="1"
+                                   class="w-100"
+                                   readonly="state != 'draft'"/>
+
+
+                            <field name="name" class="w-100"
+                                   placeholder="e.g. Annual inventory"
+                                   readonly="state != 'draft'"/>
+                            <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center w-100">
+                                    <label for="product_ids" string="Products"
+                                           class="mr-2 font-weight-bold"
+                                           style="min-width: 100px;"/>
+                                    <field name="product_ids"
+                                           options="{'no_create': True}"
+                                           readonly="state == 'done'"
+                                           widget="many2many_tags"
+                                           class="w-100 mr-2"
+                                           invisible="scan_type == 'product_category_ids'"
+                                           style="max-height: 100px;overflow-y: auto; padding: 5px;"/>
+                                </div>
+                                <button name="action_start"
+                                        invisible="state not in ['draft','confirm']"
+                                        string="Add"
+                                        type="object"
+                                        class="oe_highlight"
+                                />
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Stock Line">
+                            <field name="stock_lines_ids" nolabel="1">
+                                <list default_order="location_id,product_id"
+                                      editable="bottom" create="0"
+                                      string="Inventory Details"
+                                      class="disable_open"
+                                      js_class="inventory_validate_button"
+                                      decoration-danger="product_qty != theoretical_qty"
+                                      decoration-muted="product_qty == theoretical_qty">
+                                    <field name="company_id"
+                                           column_invisible="1"/>
+                                    <field name="product_code"
+                                           string="Product Code"/>
+                                    <field name="product_id"
+                                           options="{'no_create': True}"
+                                           readonly="1"/>
+                                    <field name="theoretical_qty"
+                                           string="On Hand"
+                                           force_save="1" readonly="1"
+                                           optional="show"/>
+                                    <field name="product_qty"
+                                           readonly="state != 'confirm'"
+                                           string="Counted"/>
+                                    <field name="state"
+                                           coloumn_invisible="1"/>
+                                    <field name="warehouse_id"
+                                           options="{'no_create': True, 'no_open': True}"
+                                           invisible="context.get('readonly_location_id',
+                                                 False)"
+                                           readonly="1"/>
+                                    <field name="location_id"
+                                           string="Bin Location"
+                                           options="{'no_create': True}"
+                                           readonly="1"/>
+                                    <field name="difference_qty"
+                                           string="Quantity Difference"
+                                           optional="show"/>
+                                    <field name="product_uom_qty"
+                                           string="UoM"
+                                           groups="uom.group_uom"
+                                           force_save="1"/>
+                                    <field name="standard_price"
+                                           string="Cost"/>
+                                    <field name="current_value"
+                                           string="Current Value"/>
+                                    <field name="new_value"
+                                           string="New Value"/>
+                                    <field name="value_diff"
+                                           string="Value Difference"/>
+                                    <field name="item_long_description"/>
+                                    <field name="messages"/>
+                                    <field name="inventory_id"
+                                           optional="hide"/>
+                                    <field name="type_id"
+                                           readonly="state != 'confirm'"
+                                           optional="hide"/>
+                                </list>
+                                <list>
+                                    <field name="name"/>
+                                    <field name="location_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="uom_id"/>
+                                </list>
+
+
+
+
+
+
+                                <form editable="1" create="0">
+                                    <sheet>
+                                        <div class="row field_color">
+                                            <field name="company_id"
+                                                   invisible="1"/>
+                                            <div class="col-4 pt-2">
+                                                <label for="product_code"
+                                                       string="Product Code"
+                                                       class="w-100"/>
+                                                <field name="product_code"
+                                                       class="w-100"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="product_id"
+                                                       string="Product"
+                                                       class="w-100"/>
+                                                <field name="product_id"
+                                                       options="{'no_create': True}"
+                                                       readonly="context.get(
+                                                   'default_product_id', False) and
+                                                   (state != 'confirm')"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="warehouse_id"
+                                                       string="Location"
+                                                       class="w-100"/>
+                                                <field name="warehouse_id"
+                                                       options="{'no_create': True,
+                                                   'no_open': True}"
+                                                       invisible="context.get(
+                                                   'readonly_location_id', False)"
+                                                       readonly="context.get(
+                                                   'readonly_location_id', False) and
+                                                   (state != 'confirm')"
+                                                       required="1"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="location_id"
+                                                       string="Location"
+                                                       class="w-100"/>
+                                                <field name="location_id"
+                                                       groups="stock.group_stock_multi_locations"
+                                                       options="{'no_create': True}"
+                                                       readonly="context.get(
+                                                   'readonly_location_id', False) and
+                                                   (state != 'confirm')"
+                                                       invisible="1"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="theoretical_qty"
+                                                       string="On Hand"
+                                                       class="w-100"/>
+                                                <field name="theoretical_qty"
+                                                       string="On Hand"
+                                                       force_save="1"
+                                                       readonly="1"
+                                                       optional="show"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="product_qty"
+                                                       string="Counted"
+                                                       class="w-100"/>
+                                                <field name="product_qty"
+                                                       readonly="state != 'confirm'"
+                                                       string="Counted"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="type_id"
+                                                       string="Type"
+                                                       class="w-100"/>
+                                                <field name="type_id"
+                                                       readonly="state != 'confirm'"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="difference_qty"
+                                                       string="Quantity Difference"
+                                                       class="w-100"/>
+                                                <field name="difference_qty"
+                                                       string="Quantity Difference"
+                                                       optional="show"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="product_uom_qty"
+                                                       string="UoM"
+                                                       class="w-100"/>
+                                                <field name="product_uom_qty"
+                                                       string="UoM"
+                                                       groups="uom.group_uom"
+                                                       force_save="1"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="standard_price"
+                                                       string="Cost"
+                                                       class="w-100"/>
+                                                <field name="standard_price"
+                                                       string="Cost"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="current_value"
+                                                       string="Current Value"
+                                                       class="w-100"/>
+                                                <field name="current_value"
+                                                       string="Current Value"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="new_value"
+                                                       string="New Value"
+                                                       class="w-100"/>
+                                                <field name="new_value"
+                                                       string="New Value"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="value_diff"
+                                                       string="Value Difference"
+                                                       class="w-100"/>
+                                                <field name="value_diff"
+                                                       string="Value Difference"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="item_long_description"
+                                                       string="Item Long Description"
+                                                       class="w-100"/>
+                                                <field name="item_long_description"/>
+                                            </div>
+                                            <div class="col-4 pt-2">
+                                                <label for="messages"
+                                                       string="Messages"
+                                                       class="w-100"/>
+                                                <field name="messages"/>
+                                            </div>
+                                            <field name="inventory_id"
+                                                   invisible="1"/>
+                                            <field name="state"
+                                                   invisible="1"/>
+                                        </div>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_stock_inventory_line_form" model="ir.ui.view">
+        <field name="name">stock.inventory.line.form</field>
+        <field name="model">stock.inventory.line</field>
+        <field name="arch" type="xml">
+            <form editable="1" create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id"
+                                   options="{'no_create': True}"
+                                   readonly="context.get('default_product_id', False)
+                                         and (state != 'confirm')"/>
+                            <field name="product_code" class="w-100"/>
+                            <field name="warehouse_id"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   invisible="context.get('readonly_location_id', False)"
+                                   readonly="context.get('readonly_location_id', False)
+                                         and (state != 'confirm')"
+                                   required="1"/>
+                            <field name="product_qty"
+                                   readonly="state != 'confirm'"
+                                   string="Counted"/>
+                            <field name="theoretical_qty"
+                                   string="On Hand"
+                                   force_save="1" readonly="1" optional="show"/>
+                            <field name="type_id"
+                                   readonly="state != 'confirm'"/>
+                            <field name="difference_qty"
+                                   string="Quantity Difference"
+                                   optional="show"/>
+                            <field name="product_uom_qty"
+                                   string="UoM"
+                                   groups="uom.group_uom"
+                                   force_save="1"/>
+                            <field name="standard_price" string="Cost"/>
+                            <field name="new_value" string="New Value"/>
+                            <field name="messages"/>
+                            <field name="state" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_inventory_form" model="ir.actions.act_window">
+        <field name="name">Quantity Adjustments</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.inventory</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('view_inventory_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('view_inventory_form')})]"/>
+        <field name="search_view_id"
+               ref="averigo_inventory_operations.view_inventory_filter"/>
+        <field name="context">{'default_qty_adjustment': True}</field>
+        <field name="domain">[('qty_adjustment', '=', True)]</field>
+        <field name="path">quantity-adjustments</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new inventory adjustment
+            </p>
+            <p>
+                This is used to correct the product quantities you have in
+                stock.
+            </p>
+        </field>
+    </record>
+
+
+    <menuitem id="menu_action_inventory" parent="stock.menu_stock_root"
+              name="Inventory Adjustment"
+              sequence="3" groups="base.group_user"/>
+    <menuitem action="action_inventory_form" id="menu_action_qty_inventory_form"
+              name="Quantity Adjustments"
+              parent="menu_action_inventory"
+              sequence="1" groups="base.group_user"/>
+</odoo>

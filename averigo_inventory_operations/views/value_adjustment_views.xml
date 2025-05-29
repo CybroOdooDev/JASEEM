@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_value_inventory_filter" model="ir.ui.view">
+        <field name="name">value.inventory.filter</field>
+        <field name="model">value.inventory</field>
+        <field name="arch" type="xml">
+            <search string="Search Inventory">
+                <field name="name" string="Reference No"/>
+                <field name="product_ids" string="Product"
+                       filter_domain="['|', ('product_ids', 'ilike', self), ('line_ids.product_id','ilike',self)]"/>
+                <filter string="Draft" name="draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="In Progress" name="confirm"
+                        domain="[('state', '=', 'confirm')]"/>
+                <filter string="Validated" name="done"
+                        domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="Inventory Date" name="inventory_date"
+                        date="date"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="status" domain="[]"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Inventory Date" name="inventories_month"
+                            domain="[]" context="{'group_by': 'date'}"
+                            help="Physical Inventories by Date"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_value_tree" model="ir.ui.view">
+        <field name="name">value.inventory.tree</field>
+        <field name="model">value.inventory</field>
+        <field name="arch" type="xml">
+            <list string="Lot/Serial Number Inventory"
+                  decoration-muted="state == 'cancel'">
+                <field name="date" string="Inventory Date"/>
+                <field name="name" string="Reference No"/>
+                <field name="product_ids" widget="many2many_tags"
+                       optional="hide"/>
+                <field name="state"/>
+                <field name="company_id" groups="base.group_multi_company"
+                       optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_value_inventory_form" model="ir.ui.view">
+        <field name="name">value.inventory.form</field>
+        <field name="model">value.inventory</field>
+        <field name="arch" type="xml">
+            <form string="Inventory Adjustment">
+                <header>
+                    <button name="action_validate" string="Validate Inventory"
+                            type="object" invisible="state != 'confirm' or line_ids"
+                           />
+                    <button name="action_validate" string="Validate Inventory"
+                            type="object" invisible="state != 'confirm' or not line_ids"
+                            class="btn-danger"
+                           />
+                    <button name="action_cancel_draft" invisible="state != 'cancel'"
+                            string="Set to Draft" type="object"/>
+                    <button name="action_cancel_draft" invisible="state != 'confirm'"
+                            string="Cancel Inventory" type="object"
+                            confirm="If you cancel this inventory adjustment,
+                            all its inventory adjustment lines will be lost. Are you sure you want to discard it ?"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirm,done"/>
+                </header>
+                <sheet>
+                    <!-- Hidden fields -->
+                    <field name="line_ids" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+
+                    <group>
+                        <group>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="name" class="w-100" placeholder="e.g. Annual inventory"
+                                   readonly="state != 'draft'"/>
+                            <field name="product_ids" options="{'no_create': True}" readonly="state == 'done'"
+                                   widget="many2many_tags" class="w-100" style="max-height: 100px;overflow-y: auto;padding: 5px;"/>
+                            <button name="action_start" invisible="state == 'done'"
+                                    string="Add" type="object"
+                                    class="oe_highlight"
+                                    />
+                        </group>
+                    </group>
+
+                    <field name="line_ids" nolabel="1">
+                        <list default_order="product_id"
+                              class="disable_open"
+                              decoration-danger="cost_changed == True"
+                              string="Value Inventory Details" editable="bottom"
+                              create="0" delete="0">
+                            <field name="company_id" column_invisible="1"/>
+                            <field name="cost_changed" column_invisible="1"/>
+                            <field name="product_code" string="Product Code"/>
+                            <field name="product_id"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   readonly="state != 'confirm'"/>
+                            <field name="inventory_date" optional="hide"/>
+                            <field name="product_qty" string="On Hand"
+                                   force_save="1" readonly="1"
+                                   optional="show"/>
+                            <field name="product_uom_id"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   string="UoM"
+                                   groups="uom.group_uom"
+                                   force_save="1"/>
+                            <field name="standard_price" string="Cost"
+                                   force_save="1"/>
+                            <field name="new_cost"
+                                   readonly="state != 'confirm'"
+                                   column_invisible="parent.state == 'done'"
+                                   string="New Cost"/>
+                            <field name="prv_cost"
+                                   string="Previous Cost" readonly="1"
+                                   column_invisible="parent.state != 'done'"/>
+                            <field name="current_value"
+                                   string="Current Value"
+                                   column_invisible="parent.state == 'done'"/>
+                            <field name="new_val" string="New Value"
+                                   readonly="state != 'confirm'"
+                                   column_invisible="parent.state != 'done'"/>
+                            <field name="prv_val" string="Previous Value"
+                                   readonly="state != 'confirm'"
+                                   column_invisible="parent.state != 'done'"/>
+                            <field name="new_value" string="New Value"
+                                   column_invisible="parent.state == 'done'"/>
+                            <field name="value_diff"
+                                   string="Value Difference"
+                                   column_invisible="parent.state == 'done'"/>
+                            <field name="val_diff" string="Value Difference"
+                                   readonly="state != 'confirm'"
+                                   column_invisible="parent.state != 'done'"/>
+                            <field name="state" invisible="1"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_value_form" model="ir.actions.act_window">
+        <field name="name">Value Adjustments</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">value.inventory</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_value_tree"/>
+        <field name="search_view_id" ref="view_value_inventory_filter"/>
+         <field name="path">value-adjustments</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new inventory adjustment
+            </p>
+            <p>
+                This is used to correct the product cost you have in stock.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="action_value_form" id="menu_action_value_inventory_form"
+              name="Value Adjustments"
+              parent="menu_action_inventory" sequence="2"
+             />
+</odoo>

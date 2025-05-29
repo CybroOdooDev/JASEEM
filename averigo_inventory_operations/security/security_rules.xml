@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <data>
+        <!--Record rule for Inventory Adjustment-->
+        <record model="ir.rule" id="cost_history_rule">
+            <field name="name">Cost History Rule</field>
+            <field name="model_id" ref="averigo_inventory_operations.model_cost_history"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('operator_id','in',company_ids)]</field>
+        </record>
+        <record model="ir.rule" id="stock_inventory_rule">
+            <field name="name">Stock Inventory Rule</field>
+            <field name="model_id" ref="averigo_inventory_operations.model_stock_inventory"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id','in',company_ids)]</field>
+        </record>
+        <record model="ir.rule" id="stock_inventory_line_rule">
+            <field name="name">Stock Inventory Line Rule</field>
+            <field name="model_id" ref="averigo_inventory_operations.model_stock_inventory_line"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id','in',company_ids)]</field>
+        </record>
+        <record model="ir.rule" id="adjust_type_rule">
+            <field name="name">Adjust Type Rule</field>
+            <field name="model_id" ref="averigo_inventory_operations.model_adjust_type"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('operator_id','in',company_ids)]</field>
+        </record>
+        <record model="ir.rule" id="value_inventory_rule">
+            <field name="name">Value Inventory Rule</field>
+            <field name="model_id" ref="averigo_inventory_operations.model_value_inventory"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id','in',company_ids)]</field>
+        </record>
+        <record model="ir.rule" id="value_inventory_line_rule">
+            <field name="name">Value Inventory Line Rule</field>
+            <field name="model_id" ref="averigo_inventory_operations.model_value_inventory_line"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id','in',company_ids)]</field>
+        </record>
+        <record model="ir.rule" id="cost_tracking_rule">
+            <field name="name">Cost Tracking Rule</field>
+            <field name="model_id" ref="averigo_inventory_operations.model_cost_tracking"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('operator_id','in',company_ids)]</field>
+        </record>
+        <record model="ir.rule" id="stock_change_standard_price_rule">
+            <field name="name">Stock Change Standard Price Rule</field>
+            <field name="model_id" ref="averigo_inventory_operations.model_stock_change_standard_price"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id','in',company_ids)]</field>
+        </record>
+    </data>
+</odoo>

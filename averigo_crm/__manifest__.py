@@ -22,6 +22,7 @@
         "security/ir.model.access.csv",
         "security/security.xml",
         "views/crm_lead_views.xml",
+        "views/docu_sign_menu.xml",
         "views/sales_team_inherit_views.xml",
         "views/convert_opportunity_wizard.xml",
         "views/mail_activity_type_views.xml",

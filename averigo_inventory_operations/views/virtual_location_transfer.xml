@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_virtual_location_form" model="ir.ui.view">
+        <field name="name">virtual.location.transfer.form</field>
+        <field name="model">virtual.location.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Virtual Location Stock Transfer" delete="0" create="0" edit="1">
+                <header>
+                    <button name="action_transfer" string="Transfer"
+                            type="object"
+                            class="oe_highlight" invisible="state != 'draft'"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="transfer_type" readonly="state == 'done'" class="w-100"/>
+                            <field name="warehouse_id" readonly="state == 'done'" class="w-100"
+                                   options="{'no_create': True, 'no_open': True, 'no_create_edit': True}"
+                                   invisible="transfer_type != 'warehouse_to_warehouse'"/>
+                            <field name="warehouse_to_id" readonly="state == 'done'" class="w-100"
+                                   options="{'no_create': True, 'no_open': True, 'no_create_edit': True}"
+                                   invisible="transfer_type != 'warehouse_to_warehouse'"/>
+
+                            <field name="warehouse_id" readonly="state == 'done'" class="w-100"
+                                   options="{'no_create': True, 'no_open': True, 'no_create_edit': True}"
+                                   invisible="transfer_type != 'warehouse_to_virtual'"/>
+                            <field name="virtual_location_id" readonly="state == 'done'" class="w-100"
+                                   options="{'no_create': True, 'no_open': True, 'no_create_edit': True}"
+                                   force_save="1" invisible="transfer_type != 'warehouse_to_virtual'"/>
+                            <field name="virtual_location_id" readonly="state == 'done'" class="w-100"
+                                   options="{'no_create': True, 'no_open': True, 'no_create_edit': True}"
+                                   force_save="1" invisible="transfer_type != 'virtual_to_warehouse'"/>
+                            <field name="warehouse_id" readonly="state == 'done'" class="w-100"
+                                   options="{'no_create': True, 'no_open': True, 'no_create_edit': True}"
+                                   invisible="transfer_type != 'virtual_to_warehouse'"/>
+                        </group>
+                        <group>
+                            <field name="categ_ids"
+                                   readonly="state == 'done'"
+                                   string="Category"
+                                   class="w-100 mt-1" options="{'no_create': True}"
+                                   widget="many2many_tags"/>
+
+                            <field name="product_ids"
+                                   readonly="state == 'done'"
+                                   string="Products"
+                                   class="w-100 mt-1" options="{'no_create': True}"
+                                   widget="many2many_tags"/>
+
+                            <button name="action_start" invisible="state != 'draft'"
+                                    string="Add" type="object"
+                                    class="oe_highlight mt-2 ms-1"/>
+                        </group>
+                        <field name="dom_product_ids" invisible="1"/>
+                        <field name="dom_category_ids" invisible="1"/>
+                        <field name="picking_id" invisible="1"/>
+                        <group>
+                                <label for="user_id"
+                                       string="Created By" class="w-100"/>
+                                <field name="user_id"
+                                       readonly="state == 'done'"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       class="w-100" nolabel="1"/>
+                                <label for="transfer_reason"
+                                       string="Transfer Reason" class="w-100"/>
+                                <field name="transfer_reason"
+                                       readonly="state == 'done'"
+                                       class="w-100" nolabel="1"/>
+                        </group>
+                    </group>
+                    <div>
+                        <field name="list_product_ids" invisible="1"/>
+                    </div>
+                    <group style="padding:20px">
+                        <field name="virtual_transfer_lines_ids" readonly="state == 'done'" nolabel="1" class="mt-3">
+                            <list create="false" editable="bottom" default_order="product_id" string="Details"
+                                  class="disable_open">
+                                <field name="company_id" column_invisible="1"/>
+                                <field name="product_code" string="Product Code"/>
+                                <field name="product_id" options="{'no_create': True, 'no_open':True}"
+                                       readonly="context.get('default_product_id', False)"/>
+                                <field name="on_hand_qty" string="On Hand" class="oe_edit_only"
+                                       column_invisible="parent.transfer_type == False or parent.transfer_type == 'virtual_to_warehouse'"/>
+                                <field name="product_uom_id" string="UoM" force_save="1"/>
+                                <field name="product_qty" string="Transfer Quantity"/>
+                                <field name="virtual_transfer_id" column_invisible="1"/>
+                            </list>
+                            <form create="false">
+                                <sheet>
+                                    <div class="row">
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="virtual_transfer_id" invisible="1"/>
+                                        <div class="col-md-4 col-sm-6 oe_left">
+                                            <label for="product_code"
+                                                   string="Product Code"
+                                                   class="w-100"/>
+                                            <field name="product_code"
+                                                   class="w-100"/>
+                                        </div>
+                                        <div class="col-md-4 col-sm-6">
+                                            <label for="product_id" string="Product"
+                                                   class="w-100"/>
+                                            <field name="product_id"
+                                                   options="{'no_create': True, 'no_open':True}"
+                                                   width="1.6"
+                                                   readonly="context.get('default_product_id', False)"
+                                            />
+                                        </div>
+                                        <div class="col-md-4 col-sm-6">
+                                            <label for="product_uom_id" string="UoM"
+                                                   class="w-100"/>
+                                            <field name="product_uom_id"
+                                                   string="UoM"
+                                                   width="0.3" force_save="1"/>
+                                        </div>
+                                        <div class="col-md-4 col-sm-6 oe_right">
+                                            <label for="product_qty"
+                                                   string="Transfer Quantity"
+                                                   class="w-100"/>
+                                            <field name="product_qty"
+                                                   width="0.5"
+                                                   class="w-100"/>
+                                        </div>
+                                    </div>
+                                </sheet>
+                            </form>
+                        </field>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_virtual_location_list" model="ir.ui.view">
+        <field name="name">view.virtual.location.list</field>
+        <field name="model">virtual.location.transfer</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" string="Reference No"/>
+                <field name="transfer_type" string="Transfer Type"/>
+                <field name="user_id" string="Created By"/>
+                <field name="create_date" string="Created On"/>
+                <field name="transfer_reason" string="Transfer Reason"/>
+                <field name="state" string="State"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_virtual_location_transfer" model="ir.actions.act_window">
+        <field name="name">Virtual Location Transfer</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">virtual.location.transfer</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_virtual_location_list')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_virtual_location_form')})]"/>
+         <field name="path">virtual-location-transfer</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Virtual Location Transfer
+            </p>
+            <p>
+                This is used to transfer the product from/to virtual location.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_virtual_location_transfer"
+              name="Virtual Location Stock Transfer" parent="stock.menu_stock_root"
+              action="action_virtual_location_transfer" sequence="8"/>
+</odoo>
