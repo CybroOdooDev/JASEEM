@@ -450,6 +450,12 @@
                         <group invisible="type == 'lead'">
                             <label for="date_deadline">Expected Closing</label>
                             <field name="date_deadline" nolabel="1"/>
+
+
+                            <field name="ebitda"/>
+                            <field name="weighted_ebitda"/>
+
+
                             <field name="team_id"
                                    options="{'no_open': True, 'no_create': True}"
                                    context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
@@ -610,20 +616,19 @@
     </record>
 
 
-
-<!--        <record id="sale_crm_view_inherit" model="ir.ui.view">-->
-<!--        <field name="name">sale.crm.view.inherit</field>-->
-<!--        <field name="model">crm.lead</field>-->
-<!--        <field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor"/>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <button name="action_sale_quotations_new" position="replace">-->
-<!--                <button string="Add To Quotation"-->
-<!--                        name="action_sale_quotations_new" type="object"-->
-<!--                        class="oe_highlight"-->
-<!--                        invisible="1"/>-->
-<!--            </button>-->
-<!--        </field>-->
-<!--    </record>-->
+    <!--        <record id="sale_crm_view_inherit" model="ir.ui.view">-->
+    <!--        <field name="name">sale.crm.view.inherit</field>-->
+    <!--        <field name="model">crm.lead</field>-->
+    <!--        <field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor"/>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <button name="action_sale_quotations_new" position="replace">-->
+    <!--                <button string="Add To Quotation"-->
+    <!--                        name="action_sale_quotations_new" type="object"-->
+    <!--                        class="oe_highlight"-->
+    <!--                        invisible="1"/>-->
+    <!--            </button>-->
+    <!--        </field>-->
+    <!--    </record>-->
 
 
     <!--    <record id="sale_crm_view_inherit" model="ir.ui.view">-->

@@ -11,4 +11,6 @@ from . import transfer_lead_config
 from . import crm_admin_users
 from . import res_users
 from . import  res_company
+from . import crm_stage
+
 

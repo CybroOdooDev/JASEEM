@@ -8,8 +8,7 @@
     "description": """This module sets up the CRM flow for Averigo.""",
     "author": "Cybrosys Techno Solutions Pvt Ltd.",
     "license": "LGPL-3",
-    "depends": [
-        "base", "web", "crm", "mail", "survey",
+    "depends": ["crm", "mail", "survey",
         "averigo_base_customer",
         'odoo_docusign_connector'
     ],
@@ -22,7 +21,6 @@
         "security/ir.model.access.csv",
         "security/security.xml",
         "views/crm_lead_views.xml",
-        "views/docu_sign_menu.xml",
         "views/sales_team_inherit_views.xml",
         "views/convert_opportunity_wizard.xml",
         "views/mail_activity_type_views.xml",
@@ -37,6 +35,7 @@
         "wizard/sow_action_wizard_views.xml",
         "wizard/transfer_wizard_views.xml",
         "views/res_company_views.xml",
+        "views/crm_stages_views.xml",
     ],
     "assets": {
         "survey.survey_assets": [
@@ -51,9 +50,6 @@
             "averigo_crm/static/src/xml/pdf_viewer_field.xml",
             "averigo_crm/static/src/scss/pdf_viewer_edit.scss",
         ],
-        'web.assets_frontend': [
-
-        ]
 
 
     },

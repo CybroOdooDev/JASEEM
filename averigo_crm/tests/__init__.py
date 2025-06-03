@@ -1,3 +1,4 @@
-from . import crm_lead
-from . import test_c_r_m_lead_conversion_utility
+# -*- coding: utf-8 -*-
 
+from . import test_customer_contract
+from . import test_res_partner
