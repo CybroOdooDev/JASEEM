@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="your_module.EbitdaStageTemplate" owl="1">
+        <t t-foreach="state.stages" t-as="stage" t-key="stage.stage_id">
+            <div class="ebitda-box" t-att-data-stage-id="stage.stage_id">
+                EBITDA: ₹ <t t-esc="stage.total_ebitda.toFixed(2)"/>
+            </div>
+        </t>
+    </t>
+</templates>

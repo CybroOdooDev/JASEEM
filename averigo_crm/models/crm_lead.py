@@ -97,13 +97,7 @@ class CRMLead(models.Model):
     ebitda = fields.Float("EBITDA")
     weighted_ebitda = fields.Float("Weighted EBITDA",
                                    compute='_compute_weighted_ebitda',
-                                   store=True)
-
-
-
-    
-
-
+                                   )
 
     @api.depends('ebitda', 'stage_id', 'is_dynamic_crm_stage',
                  'expected_revenue')
