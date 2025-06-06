@@ -48,7 +48,7 @@
             "averigo_crm/static/src/js/edit_document.js",
             "averigo_crm/static/src/js/crmController.js",
             "averigo_crm/static/src/xml/attachment_preview.xml",
-            "averigo_crm/static/src/xml/cogMenu.xml",
+            "averigo_crm/static/src/xml/crmKanban.xml",
             "averigo_crm/static/src/xml/pdf_viewer_field.xml",
             "averigo_crm/static/src/scss/pdf_viewer_edit.scss",
         ],

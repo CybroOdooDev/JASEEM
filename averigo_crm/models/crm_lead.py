@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from re import search
+
 from odoo import fields, models, api, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
@@ -525,4 +527,17 @@ class CRMLead(models.Model):
             'res_model': 'transfer.lead.wizard',
             'type': 'ir.actions.act_window',
             'target': 'new',
+        }
+
+    @api.model
+    def get_dashboard_data(self):
+        """Return total weighted EBITDA for closed and open leads."""
+        Lead = self.env['crm.lead']
+        closed_leads = Lead.search([('stage_id.is_closed_stage', '=', True)])
+        open_leads = Lead.search([('stage_id.is_closed_stage', '=', False)])
+
+        return {
+            "all_closed_ebitda": sum(
+                lead.weighted_ebitda for lead in closed_leads),
+            "all_open_ebitda": sum(lead.weighted_ebitda for lead in open_leads),
         }
