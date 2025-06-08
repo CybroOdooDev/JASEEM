@@ -23,7 +23,7 @@ class TestCrmLead(TransactionCase):
         """Test weighted_ebitda computation when is_dynamic_crm_stage is True"""
         self.lead._compute_weighted_ebitda()
         expected_weighted_ebitda = self.lead.ebitda * (
-                    self.stage.stage_percentage / 100)
+                self.stage.stage_percentage / 100)
         self.assertEqual(
             self.lead.weighted_ebitda,
             expected_weighted_ebitda,

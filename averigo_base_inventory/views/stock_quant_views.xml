@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_stock_quant_tree_editable">
+            <field name="name">stock.quant.list.update</field>
+            <field name="model">stock.quant</field>
+            <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="attributes">
+                    <attribute name="create">false</attribute>
+                    <attribute name="edit">false</attribute>
+                </xpath>
+                <xpath expr="//field[@name='location_id']" position="replace">
+                    <field name="location_id" readonly="id"
+                           options="{'no_create': True}" string="Stock In"/>
+                </xpath>
+                <xpath expr="//field[@name='location_id']" position="before">
+                    <field name="warehouse_id" string="Location" required="1"
+                           readonly="id"
+                           options="{'no_create': True, 'no_open': True}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="stock_truck_quant_tree">
+            <field name="name">Stock Quant Truck List</field>
+            <field name="model">stock.quant</field>
+            <field name="arch" type="xml">
+                <list create="0">
+                    <field name="warehouse_id"/>
+                    <field name="location_id"/>
+                    <field name="inventory_quantity" string="Truck Quantity"
+                           readonly="1"/>
+                    <field name="product_uom_id"/>
+                    <field name="value"/>
+                    <field name='company_id' groups="base.group_multi_company"
+                           optional="show"/>
+                </list>
+            </field>
+        </record>
+
+    </data>
+</odoo>

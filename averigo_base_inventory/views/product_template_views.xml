@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--Kanban view for Product Master-->
+        <record id="product_template_kanban_view_inherit" model="ir.ui.view">
+            <field name="name">Product.template.product.kanban.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id"
+                   ref="product.product_template_kanban_view"/>
+            <field name="arch" type="xml">
+                <kanban sample="1">
+                    <field name="currency_id"/>
+                    <field name="activity_state"/>
+                    <field name="categ_id"/>
+                    <progressbar field="activity_state"
+                                 colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
+                    <templates>
+                        <t t-name="card" class="flex-row">
+                            <aside>
+                                <field
+                                        name="image_128"
+                                        widget="image"
+                                        alt="Product"
+                                        options="{'img_class': 'w-100 object-fit-contain'}"
+                                        invisible="not image_128"
+                                />
+                            </aside>
+                            <main class="pe-2 ps-2">
+                                <div class="mb-1">
+                                    <div class="d-flex mb-0 h5">
+                                        <field class="me-1" name="is_favorite"
+                                               widget="boolean_favorite"
+                                               nolabel="1"/>
+                                        <field name="name"/>
+                                    </div>
+                                    <span t-if="record.default_code.value">
+                                        [<field name="default_code"/>]
+                                    </span>
+                                    <strong t-if="record.product_variant_count.value &gt; 1">
+                                        <field name="product_variant_count"/>
+                                        Variants
+                                    </strong>
+                                </div>
+                                <span>
+                                    List Price:
+                                    <field name="list_price_1" widget="monetary"
+                                           options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                </span>
+                                <span name="product_standard_price">Cost:
+                                    <field name="standard_price"/>
+                                </span>
+                                <field name="product_properties"
+                                       widget="properties"/>
+                            </main>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!--Form view for Product Master-->
+        <record model="ir.ui.view" id="product_template_form_view">
+            <field name="name">Products</field>
+            <field name="model">product.template</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="tracking" invisible="1"/>
+                        <field name="product_variant_count" invisible="1"/>
+                        <div name="button_box" class="oe_button_box" invisible="not id">
+                            <button type="object"
+                                    name="action_open_quants"
+                                    invisible="type != 'consu'"
+                                    class="oe_stat_button" icon="fa-cubes">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="qty"/>
+                                        <field name="uom_name"/>
+                                    </span>
+                                    <span class="o_stat_text">On Hand</span>
+                                </div>
+                            </button>
+                            <button type="object"
+                                    name="action_product_tmpl_forecast_report"
+                                    invisible="1"
+                                    context="{'default_product_tmpl_id': id}"
+                                    class="oe_stat_button" icon="fa-cubes">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="virtual_available"/>
+                                        <field name="uom_name"/>
+                                    </span>
+                                    <span class="o_stat_text">Forecasted</span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button"
+                                    name="action_open_truck_quants"
+                                    icon="fa-truck"
+                                    type="object"
+                                    invisible="type != 'consu'">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="transit_qty"/>
+                                        <field name="uom_name"/>
+                                    </span>
+                                    <span class="o_stat_text">Truck</span>
+                                </div>
+                            </button>
+                            <button string="Traceability" type="object"
+                                    name="action_view_averigo_stock_move_lines"
+                                    invisible="type not in ['consu']"
+                                    class="oe_stat_button" icon="fa-exchange"
+                                    groups="stock.group_stock_user,base_averigo.averigo_operator_user_group">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Traceability
+                                    </span>
+                                </div>
+                            </button>
+                            <button type="object" invisible="type != 'consu' or nbr_reordering_rules != 1"
+                                    name="action_view_orderpoints"
+                                    class="oe_stat_button" icon="fa-refresh">
+                                <div class="o_field_widget o_stat_info mr4">
+                                    <span class="o_stat_text">Min:</span>
+                                    <span class="o_stat_text">Max:</span>
+                                </div>
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="reordering_min_qty"/>
+                                    </span>
+                                    <span class="o_stat_value">
+                                        <field name="reordering_max_qty"/>
+                                    </span>
+                                </div>
+                            </button>
+
+                            <button type="object" invisible="type != 'consu' or nbr_reordering_rules == 1"
+                                    name="action_view_orderpoints"
+                                    class="oe_stat_button"
+                                    icon="fa-refresh">
+                                <field name="nbr_reordering_rules" widget="statinfo"/>
+                            </button>
+                            <button string="Lot/Serial Numbers" type="object" invisible="tracking == 'none'"
+                                    name="action_open_product_lot"
+                                    class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
+
+
+                            <button string="Putaway Rules" type="object"
+                                    name="action_view_related_putaway_rules"
+                                    class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                                    invisible="type == 'service'"
+                                    context="{'invisible_handle': True,'single_product': product_variant_count == 1,}">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Putaway Rules</span>
+                                </div>
+                            </button>
+                        </div>
+
+                        <field name="image_1920" widget="image"
+                               class="oe_avatar"
+                               options="{'preview_image': 'image_128'}"/>
+                        <div class="oe_title">
+                            <label for="name" string="Product Name"/>
+                            <h1>
+                                <div class="d-flex">
+                                    <field class="text-break" name="name"
+                                           options="{'line_breaks': False}"
+                                           widget="text"
+                                           placeholder="e.g. Cheese Burger"/>
+                                </div>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="product_type"/>
+                                <field name="default_code"/>
+                                <field name="categ_id"/>
+                            </group>
+                            <group>
+                                <field name="uom_id"/>
+                                <field name="primary_location"/>
+                                <field name="property_cost_method"/>
+                            </group>
+                        </group>
+                        <field name="type" invisible="1"/>
+                        <notebook>
+                            <page string="Sales &amp; Purchase">
+                                <group>
+                                    <group string="Sales">
+                                        <field name="list_price_1"/>
+                                        <field name="list_price_2"/>
+                                        <field name="list_price_3"/>
+                                        <field name="sale_acc"/>
+                                        <field name="description_sale"/>
+                                    </group>
+                                    <group string="Purchase">
+                                        <field name="standard_price" force_save="1"
+                                               string="Average Cost"/>
+                                        <field name="current_cost"/>
+                                        <field name="cogs_acc"/>
+                                        <field name="description_purchase"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="UPCs"
+                                  invisible="product_type == 'service'">
+                                <div>
+                                    <field name="upc_ids">
+                                        <list editable="bottom">
+                                            <field name="upc_code_id"/>
+                                        </list>
+                                    </field>
+                                </div>
+                            </page>
+                            <page string="UoM Specifications">
+                                <field name="product_uom_ids" nolabel="1">
+                                    <list editable="bottom" create="1" edit="1">
+                                        <field name="name" column_invisible="1"/>
+                                        <field name="type" options="{'no_create': True, 'no_open': True}"/>
+                                        <field name="quantity"/>
+                                        <field name="standard_price"/>
+                                        <field name="sale_price_1"/>
+                                        <field name="sale_price_2"/>
+                                        <field name="sale_price_3"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <Page string="TAX">
+                                <group>
+                                    <group>
+                                        <field name="tax_status"
+                                               widget="radio"/>
+                                        <field name="is_sugar_tax"
+                                               invisible="product_type == 'service'"/>
+                                        <field name="fluid_ounce"
+                                               invisible="product_type == 'service'"/>
+                                    </group>
+                                    <group>
+                                        <field name="litre_type"/>
+                                        <field name="is_container_tax"/>
+                                        <field name="container_deposit_amount"
+                                               invisible="not is_container_tax"/>
+                                    </group>
+                                </group>
+                            </Page>
+                            <page string="Logistics"
+                                  invisible="product_type == 'service'">
+                                <group>
+                                    <group>
+                                        <field name="volume"/>
+                                        <field name="manufacturer"/>
+                                    </group>
+                                    <group>
+                                        <field name="weight"/>
+                                        <field name="mnp_id"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Warehouse Inventory"
+                                  invisible="product_type == 'service'">
+                                <group>
+                                    <group>
+                                        <field name="inventory_acc"/>
+                                        <field name="min_qty"/>
+                                    </group>
+                                    <group>
+                                        <field name="legacy"/>
+                                        <field name="max_qty"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Micromarket Defaults"
+                                  invisible="product_type == 'service'">
+                                <group>
+                                    <group>
+                                        <field name="reorder_point"/>
+                                    </group>
+                                    <group>
+                                        <field name="reorder_qty"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Additional Images">
+                                <group>
+                                    <field name="product_image_ids"
+                                           mode="kanban"
+                                           options="{'create_text':'Browse an Image'}"
+                                           nolabel="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_template_search_view" model="ir.ui.view">
+            <field name="name">product.template.search</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <filter name="type" position="replace">
+                    <filter string="Product Type" name="product_type" context="{'group_by':'product_type'}"/>
+                </filter>
+                <filter name="goods" position="replace">
+                    <filter string="Products" name="goods" domain="[('type', '=', 'consu')]"/>
+                </filter>
+                <filter name="combo" position="replace">
+                </filter>
+            </field>
+        </record>
+
+        <!-- Action for the menu Product Master -->
+        <record model="ir.actions.act_window" id="single_product_master_action">
+            <field name="name">Products</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="path">product-master</field>
+            <field name="context">{'product_template': 1,'search_default_consumable': 1,'search_default_goods': 1}</field>
+        </record>
+        <!-- Menuitem for Product Master menu in inventory -->
+        <menuitem name="Product Master" id="single_product_master_action_id"
+                  action="single_product_master_action"
+                  parent="stock.menu_stock_root" sequence="1"/>
+
+        <menuitem id="stock.menu_product_variant_config_stock" name="Products" action="stock.product_template_action_product"
+            parent="stock.menu_stock_inventory_control" sequence="1" groups="base.group_no_one"/>
+    </data>
+</odoo>

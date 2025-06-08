@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="help_message_template_inherit" inherit_id="stock.help_message_template">
+            <xpath expr="//p[@name='footer_help_message']" position="replace">
+                <!-- Removed the footer help message -->
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="custom_uom_types_cmp_rule" model="ir.rule">
+            <field name="name">Custom Uom Types Company rule</field>
+            <field ref="model_custom_uom_types" name="model_id"/>
+            <field name="domain_force">
+                [('company_id', 'in', company_ids)]
+            </field>
+        </record>
+        <record id="multiple_uom_cmp_rule" model="ir.rule">
+            <field name="name">Multiple Uom Company rule</field>
+            <field ref="model_multiple_uom" name="model_id"/>
+            <field name="domain_force">
+                [('company_id', 'in', company_ids)]
+            </field>
+        </record>
+        <record id="uom_category_cmp_rule" model="ir.rule">
+            <field name="name">Uom Category Company rule</field>
+            <field ref="model_uom_category" name="model_id"/>
+            <field name="domain_force">
+                [('company_id', 'in', company_ids)]
+            </field>
+        </record>
+        <record id="uom_uom_cmp_rule" model="ir.rule">
+            <field name="name">Uom Uom Company rule</field>
+            <field ref="model_uom_uom" name="model_id"/>
+            <field name="domain_force">
+                [('company_id', 'in', company_ids)]
+            </field>
+        </record>
+        <record id="product_category_cmp_rule" model="ir.rule">
+            <field name="name">Product Category Company rule</field>
+            <field ref="model_product_category" name="model_id"/>
+            <field name="domain_force">
+                [('company_id', 'in', company_ids)]
+            </field>
+        </record>
+        <record id="upc_code_multi_cmp_rule" model="ir.rule">
+            <field name="name">Upc Code Multi Company rule</field>
+            <field ref="model_upc_code_multi" name="model_id"/>
+            <field name="domain_force">
+                [('company_id', 'in', company_ids)]
+            </field>
+        </record>
+         <!-- Record rule for Route -->
+        <record model="ir.rule" id="route_operator_rule">
+            <field name="name">Route rule</field>
+            <field name="model_id" ref="model_route_route"/>
+            <field name="domain_force">[('company_id','in',company_ids)]</field>
+        </record>
+    </data>
+</odoo>

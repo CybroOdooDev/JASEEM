@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="product_category_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.category.form.view.inherit</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field eval="20" name="priority"/>
+        <field name="arch" type="xml">
+            <xpath expr="." position="replace">
+                <form>
+                    <sheet>
+                        <field name="category_image_1920" widget="image" class="oe_avatar"
+                               options="{'preview_image': 'image_128','size': [200, 200]}"/>
+                        <div class="oe_title">
+                            <label for="name" string="Category Name"/>
+                            <h1>
+                                <div class="d-flex">
+                                    <field class="text-break" name="name" options="{'line_breaks': False}"
+                                           widget="text"/>
+                                </div>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="parent_id" domain="[('id', '!=', id)]"/>
+                                <field name="internal_reference"/>
+                                <field name="category_desc"/>
+                            </group>
+                            <group>
+                                <field name="exclude_from_sale" widget="boolean_toggle"
+                                       confirm="If you enable this sales under this category will not go to the VMS. Are you sure about this?"/>
+                                <field name="available_outside" widget="boolean_toggle"/>
+                                <field name="enable_front_desk" widget="boolean_toggle"/>
+                                <field name="beer_and_wine" widget="boolean_toggle"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Inventory Valuation">
+                                <field name="property_cost_method"/>
+                                <field name="property_valuation"/>
+                            </group>
+                            <group string="Logistics">
+                                <field name="route_ids" widget="many2many_tags"/>
+                                <field name="removal_strategy_id"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Account properties">
+                                <field name="property_account_income_categ_id"/>
+                                <field name="property_account_expense_categ_id"/>
+                            </group>
+                            <group string="Account Stock properties">
+                                <field name="property_stock_account_input_categ_id"
+                                       required="property_valuation == 'real_time'"/>
+                                <field name="property_stock_account_output_categ_id"
+                                       required="property_valuation == 'real_time'"/>
+                                <field name="property_stock_valuation_account_id"
+                                       required="property_valuation == 'real_time'"/>
+                                <field name="property_stock_journal" required="property_valuation == 'real_time'"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </xpath>
+        </field>
+    </record>
+</odoo>
