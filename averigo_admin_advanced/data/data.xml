@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="customer_fees_type_group" model="customer.fees.type">
+            <field name="name">Hotel Group</field>
+            <field name="readonly">True</field>
+            <field name="restrict_delete">True</field>
+        </record>
+        <record id="customer_fees_type_new_group1" model="customer.fees.type">
+            <field name="name">Group</field>
+            <field name="readonly">True</field>
+            <field name="restrict_delete">True</field>
+        </record>
+        <record id="customer_fees_type_brand" model="customer.fees.type">
+            <field name="name">Brand</field>
+            <field name="readonly">True</field>
+            <field name="restrict_delete">True</field>
+        </record>
+        <record id="customer_fees_type_management" model="customer.fees.type">
+            <field name="name">Management Company</field>
+            <field name="readonly">True</field>
+            <field name="restrict_delete">True</field>
+        </record>
+        <record id="customer_fees_type_purchasing_group" model="customer.fees.type">
+            <field name="name">Purchasing Group</field>
+            <field name="readonly">True</field>
+            <field name="restrict_delete">True</field>
+        </record>
+        <record id="customer_fees_type_national_sales" model="customer.fees.type">
+            <field name="name">National Sales Team</field>
+            <field name="readonly">True</field>
+            <field name="restrict_delete">True</field>
+        </record>
+        <record id="customer_fees_type_local_sales" model="customer.fees.type">
+            <field name="name">Local Sales Team</field>
+            <field name="readonly">True</field>
+            <field name="restrict_delete">True</field>
+        </record>
+    </data>
+</odoo>

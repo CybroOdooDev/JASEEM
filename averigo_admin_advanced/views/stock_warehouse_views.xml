@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="micro_market_form_view_inherit" model="ir.ui.view">
+        <field name="name">micro.market.form.inherit</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id"
+               ref="averigo_micro_market.micro_market_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <page name="fees" string="Fees" invisible="location_type in ['transit', 'view', 'branch', 'pantry']">
+                    <group col="2">
+                        <group col="3" invisible="check_group == True">
+                            <group>
+                                <field name="group_id"
+                                       string="Hotel Group"
+                                       placeholder="Select Hotel Group..."
+                                       class="oe_inline"
+                                       options="{'no_create_edit': True}"/>
+                                <field name="additional_group1_id"
+                                       string="Group"
+                                       placeholder="Select Group..."
+                                       class="oe_inline"
+                                       options="{'no_create_edit': True}"/>
+                                <field name="brand_id"
+                                       string="Brand"
+                                       placeholder="Select Brand..."
+                                       class="oe_inline"
+                                       options="{'no_create_edit': True}"/>
+                                <field name="management_id"
+                                       string="Management Company"
+                                       placeholder="Select Management Company..."
+                                       class="oe_inline"
+                                       options="{'no_create_edit': True}"/>
+                                <field name="national_sales_team_id"
+                                       string="National Sales Team"
+                                       placeholder="Select National Sales Team..."
+                                       class="oe_inline"
+                                       options="{'no_create_edit': True}"/>
+                                <field name="purchasing_group_id"
+                                       string="Purchasing Group"
+                                       placeholder="Select Purchasing Group..."
+                                       class="oe_inline"
+                                       options="{'no_create_edit': True}"/>
+                                <field name="local_sales_team_id"
+                                       string="Local Sales Team"
+                                       placeholder="Select Local Sales Team..."
+                                       class="oe_inline"
+                                       options="{'no_create_edit': True}"/>
+                            </group>
+                            <group>
+                                <field name="group_base_factor" string=" "
+                                       placeholder="Choose Base Factor..."
+                                       class="oe_inline"
+                                       widget="selection"/>
+                                <field name="additional_group1_base_factor"
+                                       string=" "
+                                       placeholder="Choose Base Factor..."
+                                       class="oe_inline"
+                                       widget="selection"/>
+
+                                <field name="brand_base_factor" string=" "
+                                       placeholder="Choose Base Factor..."
+                                       class="oe_inline"
+                                       widget="selection"/>
+
+                                <field name="management_base_factor" string=" "
+                                       placeholder="Choose Base Factor..."
+                                       class="oe_inline"
+                                       widget="selection"/>
+
+                                <field name="national_sales_base_factor"
+                                       string=" "
+                                       placeholder="Choose Base Factor..."
+                                       class="oe_inline"
+                                       widget="selection"/>
+                                <field name="purchasing_group_base_factor"
+                                       string=" "
+                                       placeholder="Choose Base Factor..."
+                                       class="oe_inline"
+                                       widget="selection"/>
+                                <field name="local_sales_base_factor" string=" "
+                                       placeholder="Choose Base Factor..."
+                                       class="oe_inline"
+                                       widget="selection"/>
+
+                            </group>
+                            <group>
+                                <field name="group_fees_percentage"
+                                       string=" "
+                                       class="oe_inline"/>
+                                <field name="additional_fees1"
+                                       string=" "
+                                       class="oe_inline"/>
+                                <field name="brand_fees"
+                                       string=" "
+                                       class="oe_inline"/>
+                                <field name="management_fees"
+                                       string=" "
+                                       class="oe_inline"/>
+                                <field name="national_sales_fees_percentage"
+                                       string=" "
+                                       class="oe_inline"/>
+                                <field name="purchasing_group_fees_percentage"
+                                       string=" "
+                                       class="oe_inline"/>
+                                <field name="local_sales_fees_percentage"
+                                       string=" "
+                                       class="oe_inline"/>
+                            </group>
+                            <!--                    <group class="o_group_col_6">-->
+                            <!--                        <group class="o_row">-->
+
+
+                            <!--                            <div class="o_row">-->
+
+                            <!--                            </div>-->
+                            <!--                        </group>-->
+                            <!--                    </group>-->
+                            <!--                    <group class="o_group_col_6">-->
+                            <!--                        <group class="o_row">-->
+
+                            <!--                            <field name="additional_group1_base_factor"-->
+                            <!--                                   string="Base Factor"-->
+                            <!--                                   placeholder="Choose Base Factor..."-->
+                            <!--                                   class="oe_inline"-->
+                            <!--                                   widget="selection"/>-->
+                            <!--                            <div class="o_row">-->
+                            <!--                                <field name="additional_fees1"-->
+                            <!--                                       string="Percentage"-->
+                            <!--                                       class="oe_inline"/>-->
+                            <!--                            </div>-->
+                            <!--                        </group>-->
+                            <!--                    </group>-->
+                            <!--                    <group class="o_group_col_6">-->
+                            <!--                        <group class="o_row">-->
+
+                            <!--                            <field name="brand_base_factor"-->
+                            <!--                                   string="Base Factor"-->
+                            <!--                                   placeholder="Choose Base Factor..."-->
+                            <!--                                   class="oe_inline"-->
+                            <!--                                   widget="selection"/>-->
+                            <!--                            <div class="o_row">-->
+                            <!--                                <field name="brand_fees"-->
+                            <!--                                       string="Percentage"-->
+                            <!--                                       class="oe_inline"/>-->
+                            <!--                            </div>-->
+                            <!--                        </group>-->
+                            <!--                    </group>-->
+                            <!--                    <group class="o_group_col_6">-->
+                            <!--                        <group class="o_row">-->
+
+                            <!--                            <field name="management_base_factor"-->
+                            <!--                                   string="Base Factor"-->
+                            <!--                                   placeholder="Choose Base Factor..."-->
+                            <!--                                   class="oe_inline"-->
+                            <!--                                   widget="selection"/>-->
+                            <!--                            <div class="o_row">-->
+                            <!--                                <field name="management_fees"-->
+                            <!--                                       string="Percentage"-->
+                            <!--                                       class="oe_inline"/>-->
+                            <!--                            </div>-->
+                            <!--                        </group>-->
+                            <!--                    </group>-->
+                            <!--                    <group class="o_group_col_6">-->
+                            <!--                        <group class="o_row">-->
+
+                            <!--                            <field name="national_sales_base_factor"-->
+                            <!--                                   string="Base Factor"-->
+                            <!--                                   placeholder="Choose Base Factor..."-->
+                            <!--                                   class="oe_inline"-->
+                            <!--                                   widget="selection"/>-->
+                            <!--                            <div class="o_row">-->
+                            <!--                                <field name="national_sales_fees_percentage"-->
+                            <!--                                       string="Percentage"-->
+                            <!--                                       class="oe_inline"/>-->
+                            <!--                            </div>-->
+                            <!--                        </group>-->
+                            <!--                    </group>-->
+                            <!--                    <group class="o_group_col_6">-->
+                            <!--                        <group class="o_row">-->
+
+                            <!--                            <field name="purchasing_group_base_factor"-->
+                            <!--                                   string="Base Factor"-->
+                            <!--                                   placeholder="Choose Base Factor..."-->
+                            <!--                                   class="oe_inline"-->
+                            <!--                                   widget="selection"/>-->
+                            <!--                            <div class="o_row">-->
+                            <!--                                <field name="purchasing_group_fees_percentage"-->
+                            <!--                                       string="Percentage"-->
+                            <!--                                       class="oe_inline"/>-->
+                            <!--                            </div>-->
+                            <!--                        </group>-->
+                            <!--                    </group>-->
+                            <!--                    <group class="o_group_col_6">-->
+                            <!--                        <group class="o_row">-->
+
+                            <!--                            <field name="local_sales_base_factor"-->
+                            <!--                                   string="Base Factor"-->
+                            <!--                                   placeholder="Choose Base Factor..."-->
+                            <!--                                   class="oe_inline"-->
+                            <!--                                   widget="selection"/>-->
+                            <!--                            <div class="o_row">-->
+                            <!--                                <field name="local_sales_fees_percentage"-->
+                            <!--                                       string="Percentage"-->
+                            <!--                                       class="oe_inline"/>-->
+                            <!--                            </div>-->
+                            <!--                        </group>-->
+                            <!--                    </group>-->
+                        </group>
+                        <group>
+                            <group>
+                                <field name="cc_fees"
+                                       string="Terminal CC %" readonly="check_group == True"/>
+                                <field name="app_fees" string="App CC %" readonly="check_group == True"/>
+                                <field name="stored_fund_fees" readonly="check_group == True"
+                                       string="Stored Fund %"/>
+                            </group>
+                            <group>
+                                <field name="platform_fees" readonly="check_group == True"
+                                       string="Platform"
+                                       class="oe_inline"/>
+                                <field name="room_cc" string="Hotel CC %" readonly="check_group == True"/>
+                                <field name="cash_adj" readonly="check_group == True"
+                                       string="Cash Adjustment"/>
+                            </group>
+                        </group>
+                    </group>
+
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="transaction_fees_update_form_view" model="ir.ui.view">
+        <field name="name">transaction.fees.update.view</field>
+        <field name="model">transaction.fees.update</field>
+        <field name="arch" type="xml">
+            <form string="Update Fees">
+                <group>
+                    <group>
+                        <field name="mm_dom_ids" widget="many2many_tags" invisible="1"/>
+                        <field name="company_ids" widget="many2many_tags"
+                               string="Operators"
+                               options="{'no_open': True, 'no_create': True}"/>
+                        <field name="micro_market_ids" widget="many2many_tags"
+                               string="Micromarkets"
+                               options="{'no_open': True, 'no_create': True}"
+                               domain="[('id', 'in', mm_dom_ids)]"/>
+                    </group>
+                    <group>
+                        <field name="start_date" required="1"/>
+                        <field name="end_date"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="update" string="Update" type="object"
+                            class="btn-primary"/>
+                    <button string="No" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_transaction_fees_update" model="ir.actions.act_window">
+        <field name="name">Fees Update</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">transaction.fees.update</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_transaction_fees_update" name="Update Transaction Fees"
+              action="action_transaction_fees_update"
+              parent="base.menu_administration" sequence="10"/>
+</odoo>

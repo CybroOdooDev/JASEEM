@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="admin_featured_products_form" model="ir.ui.view">
+            <field name="name">admin.featured.products.form</field>
+            <field name="model">admin.featured.products</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar" required="1" options="{'size': [200, 200]}"
+                            invisible="banner_type == 'url'"/>
+                        <group>
+                            <group>
+                                <field name="company_ids" string="Operator"
+                                       widget="many2many_tags" required="1"
+                                        options="{'no_create': True, 'no_open': True}"
+                                        domain="[('id', 'not in', company_filter_ids)]"/>
+                                <field name="location_ids" widget="many2many_tags"
+                                   options="{'no_create': True, 'no_open': True}" required="1"
+                                    domain="[('id', 'in', location_filter_ids)]"/>
+                                <field name="location_filter_ids" invisible="1"/>
+                                <field name="micro_market_ids" widget="many2many_tags"
+                                       style="max-width: 245px;"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       string="Micro Market"
+                                       domain="[('id', 'in', market_ids)]" required="1"/>
+                                <field name="product_ids" widget="many2many_tags"
+                                       domain="[('id', 'in', product_dom_ids)]"/>
+                                <field name="discount" required="1"/>
+                                <field name="send_notification"/>
+                                <field name="company_filter_ids" invisible="1"/>
+                                <field name="market_ids" invisible="1"/>
+                                <field name="product_dom_ids" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="company_id" invisible="1"/>
+                                <field name="time_format" invisible="1"/>
+                                <label for="start_time" string="Start Time"/>
+                                <div>
+                                    <field name="start_time_display" widget="float_time"
+                                           class="oe_max_width oe_inline" invisible="time_format not in ['ims', 'imp']"/>
+                                    <field name="start_time" widget="float_time" class="oe_max_width oe_inline"
+                                           />
+                                    <span class="oe_read_only" invisible="time_format not in ['hms', 'ims']">:</span>
+                                    <field name="t_start_seconds" class="oe_inline t-seconds"
+                                           invisible="time_format not in ['ims', 'hms']"/>
+                                    <field name="t_start_period" class="oe_inline oe_max_width t-period"
+                                           required="time_format in ['ims', 'imp']"/>
+                                </div>
+                                <label for="end_time" string="End Time"/>
+                                <div>
+                                    <field name="end_time_display" widget="float_time" class="oe_inline oe_max_width"
+                                           invisible="time_format not in ['ims', 'imp']"/>
+                                    <field name="end_time" widget="float_time" class="oe_max_width oe_inline"/>
+                                    <span class="oe_read_only" invisible="time_format not in ['hms', 'ims']">:
+                                    </span>
+                                    <field name="t_end_seconds" class="oe_inline t-seconds"
+                                           invisible="time_format not in ['ims', 'hms']"/>
+                                    <field name="t_end_period" class="oe_inline oe_max_width t-period"
+                                           required="time_format in ['ims', 'imp']"/>
+                                </div>
+                                <field name="start_date" required="1"/>
+                                <field name="end_date" required="1"/>
+                                <field name="banner_type"/>
+                                <field name="url" widget="url" placeholder="e.g. YouTube link"
+                                    required="banner_type=='url'" invisible="banner_type!='url'"/>
+                                <field name="product_associated" string="Image to Associate" domain="[('id', 'in',product_ids)]"
+                                       options="{'no_create': True, 'no_open': True}"/>
+                            </group>
+
+                        </group>
+                        <div>
+                            <separator string="Banner Text"/>
+                            <field style="width:100%;" name="banner_text" placeholder="Banner text..." required="1"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="admin_featured_products_list" model="ir.ui.view">
+            <field name="name">admin.featured.products.list</field>
+            <field name="model">admin.featured.products</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <list string="Specials">
+                    <field name="product_ids" widget="many2many_tags"/>
+                    <field name="discount"/>
+                    <field name="micro_market_ids" optional="show" widget="many2many_tags"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="company_id" column_invisible="1"/>
+                    <field name="start_time" optional="hide"/>
+                    <field name="end_time" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="ir_action_admin_featured_products" model="ir.actions.act_window">
+            <field name="name">Admin Featured Products</field>
+            <field name="res_model">admin.featured.products</field>
+            <field name="view_mode">list,form</field>
+            <field name="target">current</field>
+        </record>
+
+        <menuitem id="admin_featured_products_menu"
+            name="Featured Products"
+            parent="averigo_micro_market.micro_market_menu_root_admin"
+            action="ir_action_admin_featured_products"
+            sequence="7"
+        />
+    </data>
+</odoo>

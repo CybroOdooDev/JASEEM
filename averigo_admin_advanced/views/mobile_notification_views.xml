@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--Tree view for Mobile notification setup-->
+        <record id="notification_setup_list" model="ir.ui.view">
+            <field name="name">notification.setup.list</field>
+            <field name="model">notification.setup</field>
+            <field name="arch" type="xml">
+                <list string="Mobile Notification Setup">
+                    <field name="notification_type"/>
+                    <field name="notification_time" widget="float_time"/>
+                </list>
+            </field>
+        </record>
+        <!--Tree view for Mobile notification-->
+        <record id="fire_base_notification_list_view" model="ir.ui.view">
+            <field name="name">fire.base.notification.list.view</field>
+            <field name="model">fire.base.notification</field>
+            <field name="arch" type="xml">
+                <list string="Mobile Notification">
+                    <field name="title"/>
+                    <field name="user_type"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+        <!--Form view for Mobile notification setup-->
+        <record id="notification_setup_form_view" model="ir.ui.view">
+            <field name="name">notification.setup.form.view</field>
+            <field name="model">notification.setup</field>
+            <field name="arch" type="xml">
+                <form string="Mobile Notifications Setup">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="notification_type" required="1"/>
+                            </group>
+                            <group>
+                                <field name="notification_time"
+                                       widget="float_time" required="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+        <!--Form view for Mobile notification-->
+        <record id="mail_config_form" model="ir.ui.view">
+            <field name="name">fire.base.notification</field>
+            <field name="model">fire.base.notification</field>
+            <field name="arch" type="xml">
+                <form string="Mobile Notifications">
+                    <header>
+                        <button class="btn-primary" string="Send Now"
+                                type="object"
+                                name="send_notification"
+                                invisible="state == 'done'"/>
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="title" required="1" readonly="state == 'done'"/>
+                                <field name="content" required="1" readonly="state == 'done'"/>
+                                <field name="user_type" required="1" readonly="state == 'done'"/>
+                                <field name="web_url" required="1" readonly="state == 'done'"/>
+                            </group>
+                            <group>
+                                <field name="image" widget="image" required="1" readonly="state == 'done'"
+                                       options="{'size':[300, 300]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <!--Action for Mobile notification setup-->
+        <record id="action_mobile_notification_setup"
+                model="ir.actions.act_window">
+            <field name="name">Mobile Notification Setup</field>
+            <field name="res_model">notification.setup</field>
+            <field name="view_mode">list,form</field>
+            <field name="path">mobile-notification-setup</field>
+        </record>
+        <!--Action for Mobile notification setup-->
+        <record id="action_mobile_notification" model="ir.actions.act_window">
+            <field name="name">Mobile Notification</field>
+            <field name="res_model">fire.base.notification</field>
+            <field name="view_mode">list,form</field>
+            <field name="path">mobile-notification</field>
+
+        </record>
+
+        <!--Menuitem for Mobile notification setup-->
+        <menuitem id="mail_config_menu_not" name="Mobile Notification Setup"
+                  parent="averigo_micro_market.micro_market_menu_root_admin"
+                  action="action_mobile_notification_setup" sequence="8"/>
+        <!--Menuitem for Mobile notification-->
+        <menuitem id="mail_config_menu" name="Mobile Notification"
+                  parent="averigo_micro_market.micro_market_menu_root_admin"
+                  action="action_mobile_notification" sequence="7"/>
+    </data>
+</odoo>

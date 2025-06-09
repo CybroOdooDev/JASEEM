@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="fees_distribution_view_list" model="ir.ui.view">
+        <field name="name">fees.distribution.list</field>
+        <field name="model">fees.distribution</field>
+        <field name="arch" type="xml">
+            <list string="Fees Template" decoration-bf="1" create="1" edit="1"
+                  delete="1">
+                <field name="name" string="Template Name"/>
+                <field name="company_ids" widget="many2many_tags"
+                       string="Operators"/>
+                <field name="micro_market_ids" widget="many2many_tags"
+                       string="Micromarkets"/>
+                <field name="dom_mm_ids" widget="many2many_tags" invisible="1"/>
+                <field name="group_fees_percentage"
+                       string="Hotel Commission %"/>
+                <field name="brand_fees_percentage" string="Brand %"/>
+                <field name="create_date" string="Created On"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="fees_distribution_view_form" model="ir.ui.view">
+        <field name="name">fees.distribution.form</field>
+        <field name="model">fees.distribution</field>
+        <field name="arch" type="xml">
+            <form string="Fees Template" class="o_fees_distribution_form">
+                <header>
+                    <!-- Add status bar or action buttons here if needed -->
+                    <button class="btn-primary" string="Update Micromarket"
+                            type="object"
+                            name="update_micromarket"/>
+                </header>
+                <sheet>
+                    <!-- Title Section -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Name"
+                                   class="o_text_overflow"/>
+                        </h1>
+                    </div>
+
+                    <!-- Basic Information Card -->
+                    <div class="o_group">
+                        <div class="o_group_col">
+                            <group class="o_label_nowrap">
+                                <field name="company_ids"
+                                       widget="many2many_tags"
+                                       string="Operators"
+                                       placeholder="Select operators..."
+                                       options="{'no_create_edit': True}"/>
+                                <field name="micro_market_ids"
+                                       widget="many2many_tags"
+                                       string="Micromarkets"
+                                       placeholder="Select locations..."
+                                       options="{'no_create_edit': True}"
+                                       domain="[('id', 'in', dom_mm_ids)]"/>
+                                <field name="dom_mm_ids" invisible="1"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <!-- Commission Structure -->
+                    <notebook>
+                        <page string="Fees Structure" name="fees_structure">
+
+                            <!-- Hotel Commission Section -->
+                            <group string="Hotel Commission"
+                                   class="o_group_col_6">
+                                <div class="o_row">
+                                    <field name="group_id"
+                                           string="Hotel Group"
+                                           placeholder="Select Hotel Group..."
+                                           class="oe_inline" domain="[('type_id.name', '=', 'Hotel Group')]"
+                                           options="{'no_create_edit': True}"/>
+                                    <field name="group_base_factor"
+                                           string="Base Factor"
+                                           placeholder="Choose Base Factor..."
+                                           class="oe_inline"
+                                           widget="selection"/>
+                                    <div class="o_row">
+                                        <field name="group_fees_percentage"
+                                               string="Percentage"
+                                               class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </group>
+                            <!-- Additional Group Section -->
+                            <group string="Group" class="o_group_col_6">
+                                <div class="o_row">
+                                    <field name="additional_group1_id"
+                                           string="Group"
+                                           placeholder="Select Group..."
+                                           domain="[('type_id.name', '=', 'Group')]"
+                                           class="oe_inline"
+                                           options="{'no_create_edit': True}"/>
+                                    <field name="additional_group1_base_factor"
+                                           string="Base Factor"
+                                           placeholder="Choose Base Factor..."
+                                           class="oe_inline"
+                                           widget="selection"/>
+                                    <div class="o_row">
+                                        <field name="additional_group1_fees_percentage"
+                                               string="Percentage"
+                                               class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </group>
+                            <!-- Brand Section -->
+                            <group string="Brand" class="o_group_col_6">
+                                <div class="o_row">
+                                    <field name="brand_id"
+                                           string="Brand"
+                                           placeholder="Select Brand..."
+                                           domain="[('type_id.name', '=', 'Brand')]"
+                                           class="oe_inline"
+                                           options="{'no_create_edit': True}"/>
+                                    <field name="brand_base_factor"
+                                           string="Base Factor"
+                                           placeholder="Choose Base Factor..."
+                                           class="oe_inline"
+                                           widget="selection"/>
+                                    <div class="o_row">
+                                        <field name="brand_fees_percentage"
+                                               string="Percentage"
+                                               class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </group>
+                            <!-- Management Section -->
+                            <group string="Management" class="o_group_col_6">
+                                <div class="o_row">
+                                    <field name="management_id"
+                                           string="Management Company"
+                                           placeholder="Select Management Company..."
+                                           class="oe_inline" domain="[('type_id.name', '=', 'Management Company')]"
+                                           options="{'no_create_edit': True}"/>
+                                    <field name="management_base_factor"
+                                           string="Base Factor"
+                                           placeholder="Choose Base Factor..."
+                                           class="oe_inline"
+                                           widget="selection"/>
+                                    <div class="o_row">
+                                        <field name="management_fees_percentage"
+                                               string="Percentage"
+                                               class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </group>
+
+                            <!-- National Sales Team Section -->
+                            <group string="National Sales Team"
+                                   class="o_group_col_6">
+                                <div class="o_row">
+                                    <field name="national_sales_team_id"
+                                           string="National Sales Team"
+                                           domain="[('type_id.name', '=', 'National Sales Team')]"
+                                           placeholder="Select National Sales Team..."
+                                           class="oe_inline"
+                                           options="{'no_create_edit': True}"/>
+                                    <field name="national_sales_base_factor"
+                                           string="Base Factor"
+                                           placeholder="Choose Base Factor..."
+                                           class="oe_inline"
+                                           widget="selection"/>
+                                    <div class="o_row">
+                                        <field name="national_sales_fees_percentage"
+                                               string="Percentage"
+                                               class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </group>
+                            <group string="Purchasing Group"
+                                   class="o_group_col_6">
+                                <div class="o_row">
+                                    <field name="purchasing_group_id"
+                                           string="Purchasing Group"
+                                           placeholder="Select Purchasing Group..."
+                                           domain="[('type_id.name', '=', 'Purchasing Group')]"
+                                           class="oe_inline"
+                                           options="{'no_create_edit': True}"/>
+                                    <field name="purchasing_group_base_factor"
+                                           string="Base Factor"
+                                           placeholder="Choose Base Factor..."
+                                           class="oe_inline"
+                                           widget="selection"/>
+                                    <div class="o_row">
+                                        <field name="purchasing_group_fees_percentage"
+                                               string="Percentage"
+                                               class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </group>
+                            <group string="Local Sales Team"
+                                   class="o_group_col_6">
+                                <div class="o_row">
+                                    <field name="local_sales_team_id"
+                                           string="Local Sales Team"
+                                           domain="[('type_id.name', '=', 'Local Sales Team')]"
+                                           placeholder="Select Local Sales Team..."
+                                           class="oe_inline"
+                                           options="{'no_create_edit': True}"/>
+                                    <field name="local_sales_base_factor"
+                                           string="Base Factor"
+                                           placeholder="Choose Base Factor..."
+                                           class="oe_inline"
+                                           widget="selection"/>
+                                    <div class="o_row">
+                                        <field name="local_sales_fees_percentage"
+                                               string="Percentage"
+                                               class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </group>
+
+                        </page>
+                        <page string="Others" name="others">
+                            <group>
+                                <group>
+                                    <field name="cc_fees"
+                                           string="Terminal CC %"/>
+                                    <field name="app_fees" string="App CC %"/>
+                                    <field name="stored_fund_fees"
+                                           string="Stored Fund %"/>
+                                </group>
+                                <group>
+                                    <div class="o_row">
+                                        <label for="platform_fees"
+                                               string="Platform"/>
+                                        <field name="platform_fees"
+                                               string="Platform"
+                                               class="oe_inline"/>
+                                        <field name="platform_fees_type"
+                                               string=""
+                                               class="oe_inline"
+                                               widget="selection"/>
+                                    </div>
+                                    <field name="platform_fees_per_day"
+                                           string="Platform Fees / day"
+                                           invisible="platform_fees_type == 'percentage'"/>
+                                    <field name="room_cc" string="Hotel CC %"/>
+                                    <field name="cash_adj"
+                                           string="Cash Adjustment"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <!-- Action -->
+    <record id="action_fees_distribution" model="ir.actions.act_window">
+        <field name="name">Fees Templates</field>
+        <field name="res_model">fees.distribution</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first fees distribution template
+            </p>
+            <p>
+                Configure commission structures for different operators, hotel
+                groups, brands, and management companies.
+                Templates help standardize fee distribution across your
+                organization.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="fees_distribution_menu"
+              name="Fees Templates"
+              sequence="9"
+              parent="base.menu_administration"
+              action="action_fees_distribution"
+              groups="base.group_system"/>
+
+</odoo>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!--Form view for Terminal Advertisement-->
+        <record id="terminal_advertisement_form_view" model="ir.ui.view">
+            <field name="name">terminal.advertisement.form</field>
+            <field name="model">terminal.advertisement</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <group>
+                            <group>
+                                <field name="operator_ids" widget="many2many_tags" required="1"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       style="max-height: 100px;overflow-y: auto;padding: 5px;"/>
+                                <field name="partner_ids" invisible="1"/>
+                                <field name="location" widget="many2many_tags"
+                                       domain="[('id', 'in', partner_ids)]" required="1"
+                                       style="max-height: 100px;overflow-y: auto;padding: 5px;"/>
+                                <field name="market_ids" invisible="1"/>
+                                <field name="micro_market_id" widget="many2many_tags"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       domain="[('id', 'in', market_ids)]" required="1"
+                                       style="max-height: 100px;overflow-y: auto;padding: 5px;"/>
+                            </group>
+                            <group>
+                                <field name="delay_time"/>
+                                <field name="local_offer_url"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Advertisement Image">
+                                <field name="product_template_image_ids" options="{'create_text':'Browse an Image'}">
+                                    <list create="1" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="image_1920" widget="image" options="{'size':[80,80]}"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--list view for Terminal Advertisement-->
+        <record id="terminal_advertisement_list_view" model="ir.ui.view">
+            <field name="name">terminal.advertisement.list</field>
+            <field name="model">terminal.advertisement</field>
+            <field name="arch" type="xml">
+                <list string="Terminal Advertisement">
+                    <field name="micro_market_id" widget="many2many_tags"/>
+                </list>
+            </field>
+        </record>
+        <!--Search view for Terminal Advertisement-->
+<!--        <record id="terminal_advertisement_search_view" model="ir.ui.view">-->
+<!--            <field name="name">terminal.advertisement.search</field>-->
+<!--            <field name="model">terminal.advertisement</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <search string="Terminal Advertisement">-->
+<!--                    <filter name="active" string="Active" domain="[('active','=',True)]"/>-->
+<!--                    <filter name="active" string="Archived" domain="[('active','=',False)]"/>-->
+<!--                </search>-->
+<!--            </field>-->
+<!--        </record>-->
+        <!--Action for Terminal Advertisement Menu item-->
+        <record id="action_terminal_advertisement_menu_item" model="ir.actions.act_window">
+            <field name="name">Terminal Advertisement</field>
+            <field name="res_model">terminal.advertisement</field>
+            <field name="view_mode">list,form</field>
+             <field name="path">terminal-advertisement</field>
+            <field name="target">current</field>
+        </record>
+        <!--Menu item for Terminal Advertisement-->
+<!--        <menuitem name="Terminal Advertisement" id="terminal_advertisement_menu_item_id" sequence="3"-->
+<!--                  parent="micro_market.micro_market_menu_root_admin"-->
+<!--                  action="action_terminal_advertisement_menu_item"/>-->
+
+         <menuitem action="action_terminal_advertisement_menu_item" parent="averigo_micro_market.micro_market_menu_root_admin"
+                  id="menu_terminal_advertisement" sequence="4" name="Terminal Advertisement" groups="base_averigo.averigo_admin_backend_group"/>
+    </data>
+</odoo>

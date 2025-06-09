@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_upc_scan_failure" model="ir.actions.act_window">
+        <field name="name">UPC Scan Failures</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">upc.scan.failure</field>
+        <field name="view_mode">list</field>
+    </record>
+    <record id="upc_scan_failure_view_list" model="ir.ui.view">
+        <field name="name">upc.scan.failure.view.list</field>
+            <field name="model">upc.scan.failure</field>
+            <field name="arch" type="xml">
+                <list string="UPC Scan Failure" editable="bottom" import="0" create="0">
+                    <field name="date" readonly="1"/>
+                    <field name="location_id" readonly="1"/>
+                    <field name="app_version" readonly="1"/>
+                    <field name="user_id" readonly="1"/>
+                    <field name="upc_code" readonly="1"/>
+                    <field name="company_id" readonly="1" invisible="1"/>
+                </list>
+            </field>
+    </record>
+    <menuitem name="UPC Scan Failures"
+              id="menu_upc_scan_failure"
+              parent="averigo_micro_market.micro_market_menu_root_admin"
+              action="action_upc_scan_failure"
+              sequence="13"/>
+</odoo>

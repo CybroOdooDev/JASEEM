@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="customers_fees_type_view_list" model="ir.ui.view">
+        <field name="name">customer.fees.type.list</field>
+        <field name="model">customer.fees.type</field>
+        <field name="arch" type="xml">
+            <list string="Customer Fees Type">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="customers_fees_type_view_form" model="ir.ui.view">
+        <field name="name">customer.fees.type.form</field>
+        <field name="model">customer.fees.type</field>
+        <field name="arch" type="xml">
+            <form string="Customer Fees Type">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="readonly"/>
+                            <!--                                   attrs="{'readonly': [('readonly', '=', True)]}"/>-->
+                            <field name="readonly" invisible="1"/>
+                            <field name="restrict_delete" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_customer_type_fees"
+            model="ir.actions.act_window">
+        <field name="name">Customer Fees Type</field>
+        <field name="res_model">customer.fees.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="path">customer-fees-type</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Customer Fees Type
+            </p>
+        </field>
+    </record>
+    <!--    Menuitem for Branches-->
+    <menuitem id="customer_fees_type_menu" name="Customer Fees Type"
+              sequence="8" parent="base.menu_administration"
+              action="action_customer_type_fees"/>
+
+    <!--              group="base_averigo.averigo_admin_backend_group"-->
+</odoo>

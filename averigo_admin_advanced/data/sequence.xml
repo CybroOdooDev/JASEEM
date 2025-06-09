@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--  Employee Discount sequence  -->
+        <record id="employee_discount_sequence" model="ir.sequence">
+            <field name="name">Employee Discount</field>
+            <field name="code">employee.discount.setup</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">Employee Discount/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <!--  App user session sequence  -->
+        <record id="app_user_session_sequence" model="ir.sequence">
+            <field name="name">App User Session Sequence</field>
+            <field name="code">user.session.history</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">%(y)s/%(month)s/%(day)s/</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

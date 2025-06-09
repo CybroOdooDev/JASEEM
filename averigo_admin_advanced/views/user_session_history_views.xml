@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="user_session_history_list">
+            <field name="name">user.session.history.list.view</field>
+            <field name="model">user.session.history</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <list create="1" delete="1" edit="1">
+                    <field name="operator_id"/>
+                    <field name="location_id"/>
+                    <field name="micro_market_id"/>
+                    <field name="session_date"/>
+                    <field name="purchase_qty"/>
+                    <field name="purchase_value"/>
+                    <field name="room_no"/>
+<!--                    <button name="action_view_products" icon="fa-info-circle" type="object"/>-->
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="user_session_history_form">
+            <field name="name">user.session.history.form.view</field>
+            <field name="model">user.session.history</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <form string="Session Details" create="1" delete="1" edit="1">
+                    <group string="Last Session Details">
+                        <group>
+                            <field name="sequence"/>
+                            <field name="operator_id"/>
+                            <field name="location_id"/>
+                            <field name="micro_market_id"/>
+                            <field name="payment_method"/>
+                            <field name="card_last" invisible="1"/>
+                            <field name="membership_number"/>
+                        </group>
+                        <group>
+                            <field name="session_date"/>
+                            <field name="purchase_qty"/>
+                            <field name="purchase_value"/>
+                            <field name="total_trans_amount"/>
+                            <field name="total_crv_amount"/>
+                            <field name="total_sales_amount"/>
+                            <field name="cash_amount"/>
+                        </group>
+                    </group>
+                    <separator string="Product Details"/>
+                    <field name="product_list">
+                        <list create="1" delete="1" edit="1">
+                            <field name="product_id"/>
+                            <field name="qty"/>
+                            <field name="product_uom_id"/>
+                            <field name="price"/>
+                            <field name="list_price"/>
+                            <field name="net_price"/>
+                        </list>
+                        <form create="1" delete="1" edit="1">
+                            <sheet>
+                                <group>
+                                    <group>
+                                        <field name="product_id"/>
+                                        <field name="qty"/>
+                                        <field name="product_uom_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="price"/>
+                                        <field name="list_price"/>
+                                        <field name="net_price"/>
+                                        <field name="tax_amount"/>
+                                        <field name="crv_tax" string="Container Deposit"/>
+                                    </group>
+                                </group>
+                            </sheet>
+                            <footer/>
+                        </form>
+                    </field>
+                    <footer/>
+                </form>
+            </field>
+        </record>
+        <record id="action_user_session_history" model="ir.actions.act_window">
+            <field name="name">User Session History</field>
+            <field name="res_model">user.session.history</field>
+            <field name="view_mode">list,form</field>
+             <field name="path">transaction-history</field>
+            <field name="target">current</field>
+        </record>
+        <!--Menu item for User Session History -->
+        <menuitem action="action_user_session_history" web_icon="base_averigo/static/description/session.png"
+                  id="menu_user_session_history" sequence="4" name="User Session History" groups="base_averigo.averigo_admin_backend_group"/>
+    </data>
+</odoo>
