@@ -1,0 +1,218 @@
+:root {
+// 	--main-color: #3d9bbb;
+// 	--main-color: #009af0;
+	--main-color: #4C3421;
+}
+@font-face {
+}
+body {
+
+}
+
+/* ============================= */
+/*       Field Styling           */
+/* ============================= */
+
+.o_field_widget.o_required_modifier .o_input {
+    border-left: 3px solid red !important;
+    padding-left: 5px;
+    .o-autocomplete--input {
+        border-left: none !important;
+    }
+}
+
+.o_list_view .o_field_widget.o_required_modifier.o_field_invalid {
+    border-left: 3px solid red !important;
+    padding-left: 5px;
+}
+
+.o_form_view{
+    .o_input {
+        border-radius: 4px;
+        height: 45px;
+        background: #F7F7F7;
+        z-index: 0;
+        padding: 14px 18px !important;
+        &:hover{
+            border: none;
+        }
+        &:focus{
+            border: none;
+        }
+    }
+    .o_wrap_input{
+        .o_field_widget.o_readonly_modifier {
+            border-radius: 4px;
+            height: 45px;
+            padding: 14px 18px !important;
+            &:hover{
+                border: none;
+            }
+            &:focus{
+                border: none;
+            }
+        }
+    }
+    .o_field_empty {
+        display: block !important;
+    }
+}
+
+
+textarea.o_input.o_field_translate {
+    height: 50px !important;
+    padding: 8px 12px !important;
+}
+
+.o_field_widget .o_field_many2one_selection {
+    background-color: #F7F7F7;
+}
+
+.o_address_country {
+    border-radius: 4px;
+    background-color: #F7F7F7 !important;;
+    height: 45 !important;
+    padding: 14px 18px !important;
+    &:hover{
+        border: none;
+    }
+    &:focus{
+        border: none;
+    }
+}
+
+.o_field_many2many_tags{
+    width: 100%;
+    .o_tags_input{
+        width: 100%;
+        .o_tag{
+            height: fit-content;
+            padding: 4px;
+        }
+    }
+    .o_input_dropdown{
+        .dropdown{
+            .o_input{
+                padding: 0px !important;
+            }
+        }
+    }
+}
+
+.o_field_many2many_tags .o_field_tags {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.o_field_many2manyattendee{
+    border-radius: 4px;
+    background: #F7F7F7;
+    z-index: 0;
+    padding: 14px 18px !important;
+    .o_input{
+        all: unset;
+        display: block;
+    }
+}
+
+.o_field_float_time{
+    .o_input{
+        all: unset;
+        display: block;
+    }
+    + span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+.d-flex.gap-2 > div.align-items-start:has(.o_field_float_time) {
+    align-items: center !important;
+}
+
+.d-flex.gap-2:has(> div.align-items-start > .o_field_float_time) {
+    align-items: center;
+}
+
+/* ============================= */
+/*        Field Label         */
+/* ============================= */
+
+.o_form_view{
+    .o_form_label.o_form_label_readonly{
+        opacity: 1.66;
+        font-weight: 500;
+    }
+    .o_group .o_wrap_label{
+        place-content: center;
+    }
+}
+
+/* ============================= */
+/*        Button Styling         */
+/* ============================= */
+
+.btn-outline-primary {
+    color: var(--main-color);
+    border-color: var(--main-color);
+    padding: 6px 14px;
+    font-size: 16px;
+    &:hover{
+        background-color: var(--main-color);
+        border-color: var(--main-color);
+        color: #fff
+    }
+}
+/* ============================= */
+/*       Search View Styling     */
+/* ============================= */
+
+// /* Highlight border and text when search is focused */
+// .o_searchview:focus-within {
+//     border: 1px solid var(--main-color);
+//     color: var(--main-color);
+// }
+
+// /* Add padding to search input */
+// .o_searchview_input_container .o_searchview_input {
+//     padding: 6px !important;
+// }
+//
+// /* Change dropdown border color when search is focused */
+// .o_searchview:focus-within + .o-dropdown .o_searchview_dropdown_toggler {
+//     border-top: 1px solid var(--main-color);
+//     border-right: 1px solid var(--main-color);
+//     border-bottom: 1px solid var(--main-color);
+// }
+
+/* ============================= */
+/*       Note book Styling     */
+/* ============================= */
+
+.o_form_view {
+	.o_form_renderer {
+        .o_notebook{
+            padding: 30px;
+            .o_notebook_headers{
+                .nav-tabs{
+                    gap: 10px;
+                    padding-bottom: 1px !important;
+                    .nav-item{
+                        .nav-link{
+                            background-color: #f6f6f6;
+                            color: #7D8D99;
+                            border: 1px solid #f6f6f6;
+                            padding: 8px 16px;
+                            }
+                        .active{
+                            background-color:#F2FFF1;
+                            color: var(--main-color);
+                            border: none;
+                            font-weight: 500;
+                        }
+                    }
+                }
+            }
+        }
+	}
+}

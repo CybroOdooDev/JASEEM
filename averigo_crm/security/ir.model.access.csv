@@ -12,3 +12,4 @@ access_transfer_access_users,transfer.access.users,model_transfer_access_users,b
 access_transfer_lead_assign_users,default.lead.assign.users,model_default_lead_assign_users,base.group_user,1,1,0,0
 access_transfer_assign_users,transfer.assign.users,model_transfer_assign_users,base.group_user,1,1,1,1
 access_crm_users_notify,crm.users.notify,model_crm_users_notify,base.group_user,1,1,0,0
+access_crm_lead,crm.lead,model_crm_lead,base_averigo.averigo_operator_user_group,1,1,1,1

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.FormStatusIndicator" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='o_form_status_indicator_buttons d-flex']"
+               position="replace">
+            <div class="o_form_status_indicator_buttons d-flex gap-1"
+                 t-att-class="{ invisible: !(props.model.root.isNew or displayButtons) }">
+               <button
+                       type="button"
+                       class="o_form_button_save btn btn-outline-primary"
+                       data-hotkey="s" t-on-click.stop="save"
+                       data-tooltip="Save manually"
+                       aria-label="Save manually"
+                       t-ref="save">
+                   <i class="fa fa-cloud-upload fa-fw"/>Save
+               </button>
+                <button
+                        type="button"
+                        class="o_form_button_cancel btn btn-outline-primary"
+                        data-hotkey="j"
+                        t-on-click.stop="discard"
+                        data-tooltip="Discard all changes"
+                        style="margin-right: 4px;"
+                        aria-label="Discard all changes">
+                    <i class="fa fa-times fa-fw"/>Discard
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="web_control_panel_inherit" t-inherit="web.ControlPanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100']" position="replace">
+            <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
+                <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none" t-ref="mainButtons" t-on-keydown="onMainButtonsKeydown">
+                    <div t-if="env.isSmall" class="btn-group o_control_panel_collapsed_create">
+                        <t t-slot="control-panel-create-button"/>
+                        <button t-att-class="{invisible: display.disableDropdown}" type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split o_control_panel_collapsed_create" data-bs-toggle="dropdown" aria-expanded="false">
+                             <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu o_control_panel_collapsed_create">
+                            <t t-slot="layout-buttons"/>
+                            <t t-slot="control-panel-always-buttons"/>
+                        </ul>
+                    </div>
+                    <div t-else="" class="d-inline-flex gap-1">
+                        <t t-slot="control-panel-create-button"/>
+                        <t t-slot="layout-buttons"/>
+                        <t t-slot="control-panel-always-buttons"/>
+                    </div>
+                </div>
+                <t t-if="env.config.noBreadcrumbs">
+                    <section class="o_control_panel_breadcrumbs_actions d-contents d-print-none">
+                        <t t-slot="control-panel-status-indicator" />
+                    </section>
+                </t>
+                <t t-elif="env.isSmall">
+                    <div class="o_fallback_breadcrumbs d-contents"/>
+                    <Breadcrumbs breadcrumbs="breadcrumbs"
+                                 t-portal="'.o_navbar_breadcrumbs, .o_fallback_breadcrumbs'"/>
+                    <section class="o_control_panel_breadcrumbs_actions d-contents">
+                        <t t-slot="control-panel-status-indicator"/>
+                    </section>
+                </t>
+                <t t-else="">
+                    <Breadcrumbs breadcrumbs="breadcrumbs">
+                        <t t-set-slot="breadcrumb-status-indicator">
+                            <t t-slot="control-panel-status-indicator" />
+                        </t>
+                    </Breadcrumbs>
+                </t>
+                <div t-if="!env.isSmall" class="me-auto"/> <!-- Spacer -->
+            </div>
+        </xpath>
+        <xpath expr="//div[@class='o_control_panel_actions d-empty-none d-flex align-items-center justify-content-start justify-content-lg-around order-2 order-lg-1 w-100 mw-100 w-lg-auto']" position="after">
+            <t t-if="env.config.noBreadcrumbs">
+                <t t-slot="control-panel-additional-actions"/>
+            </t>
+            <t t-elif="env.isSmall">
+                <t t-slot="control-panel-additional-actions"/>
+            </t>
+            <t t-else="">
+                <t t-set-slot="breadcrumb-additional-actions">
+                    <t t-slot="control-panel-additional-actions"/>
+                </t>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="web_cogmenu_inherit" t-inherit="web.CogMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//button[@class='d-print-none btn']" position="replace">
+            <button class="d-print-none btn btn-outline-primary" t-att-class="env.isSmall ? 'btn-secondary' : 'd-print-none btn btn-outline-primary'" data-hotkey="u" data-tooltip="Actions">
+                <i class="fa fa-fw fa-cog"/>Action
+            </button>
+        </xpath>
+    </t>
+    <t t-name="web_formcogmenu_inherit" t-inherit="web.FormCogMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//button[@class='d-print-none btn']" position="replace">
+            <button class="d-print-none btn btn-outline-primary" data-hotkey="u" data-tooltip="Actions">
+                <i class="fa fa-fw fa-cog"/>Action
+            </button>
+        </xpath>
+    </t>
+    <t t-name="web_listcogmenu_inherit" t-inherit="web.ListCogMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//button[@class='d-print-none btn']" position="replace">
+            <button class="d-print-none btn btn-outline-primary" data-hotkey="u" data-tooltip="Actions">
+                <i class="fa fa-fw fa-cog"/>Action
+            </button>
+        </xpath>
+    </t>
+
+</templates>

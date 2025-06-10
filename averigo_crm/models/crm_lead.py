@@ -540,4 +540,5 @@ class CRMLead(models.Model):
             "all_closed_ebitda": sum(
                 lead.weighted_ebitda for lead in closed_leads),
             "all_open_ebitda": sum(lead.weighted_ebitda for lead in open_leads),
+            'is_show_ebitda': self.env.company.dynamic_stages_in_crm,
         }

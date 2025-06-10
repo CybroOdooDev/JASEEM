@@ -37,6 +37,7 @@ patch(KanbanController.prototype, {
                     ...this.state,
                     ebitda_open: ebitdaData.all_open_ebitda,
                     ebitda_closed: ebitdaData.all_closed_ebitda,
+                    isShowEbitda: ebitdaData.is_show_ebitda
                 };
             }
         });

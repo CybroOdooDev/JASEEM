@@ -7,11 +7,14 @@
                ref="averigo_base_customer.res_partner_view_form_customer"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button class="oe_stat_button o_res_partner_tip_opp"
+                <button groups="base_averigo.averigo_operator_user_group"
+                        class="oe_stat_button o_res_partner_tip_opp"
                         type="object"
                         name="open_my_opportunities" icon="fa-star">
                     <field name="opportunity_count"
-                           string="Opportunities" widget="statinfo"/>
+                           string="Opportunities" widget="statinfo"
+
+                    />
                 </button>
                 <button class="oe_stat_button o_res_partner_tip_act"
                         type="object"

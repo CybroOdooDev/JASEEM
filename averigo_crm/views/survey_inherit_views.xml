@@ -135,5 +135,7 @@
                 </xpath>
             </field>
         </record>
-
+    <record id="survey.menu_surveys" model="ir.ui.menu">
+        <field name="web_icon">averigo_crm,static/description/survey_icon.png</field>
+    </record>
 </odoo>

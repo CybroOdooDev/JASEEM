@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="averigo_theme.HomeMenu">
+        <div t-ref="root" class="o_home_menu h-100"
+             t-att-class="{ 'o_ios_app': state.isIosApp }">
+            <div class="container">
+                <!-- Clean search input -->
+                <input t-ref="input"
+                       type="text"
+                       class="o_search_hidden visually-hidden w-auto"
+                       data-allow-hotkeys="true"
+                       t-on-input="_onInputSearch"
+                       t-on-blur="_onInputBlur"
+                       t-on-compositionstart="_onCompositionStart"
+                       role="combobox"
+                       t-att-aria-activedescendant="'result_app_' + state.focusedIndex"
+                       t-att-aria-expanded="displayedApps.length ? 'true' : 'false'"
+                       aria-autocomplete="list"
+                       aria-haspopup="listbox"
+                       placeholder="Search applications..."/>
+
+                <!-- App grid with clean design -->
+                <div t-if="displayedApps.length" role="listbox"
+                     class="o_apps row user-select-none mx-0">
+                    <div t-foreach="displayedApps" t-as="app" t-key="app.id"
+                         class="col-6 col-sm-4 col-md-3 col-lg-2 o_draggable mb-3 px-1">
+                        <a t-att-id="'result_app_' + app_index"
+                           role="option"
+                           t-att-aria-selected="state.focusedIndex === app_index ? 'true' : 'false'"
+                           class="o_app o_menuitem d-flex flex-column justify-content-center align-items-center w-100 text-decoration-none"
+                           t-att-class="{ 'o_focused': state.focusedIndex === app_index }"
+                           t-att-data-menu-xmlid="app.xmlid"
+                           t-att-href="app.href"
+                           t-on-click.prevent="() => this._onAppClick(app)"
+                           t-att-title="app.label || app.name">
+                            <!-- Clean app icon container -->
+                            <div class="o_app_icon_container d-flex justify-content-center align-items-center">
+                                <img t-if="app.webIconData"
+                                     class="o_app_icon"
+                                     t-att-src="app.webIconData"
+                                     t-att-alt="app.label || app.name"/>
+                                <div t-else=""
+                                     class="o_app_icon d-flex justify-content-center align-items-center"
+                                     t-att-style="'background-color: ' + (app.webIcon.backgroundColor || '#ffffff')">
+                                    <i t-att-class="app.webIcon.iconClass"
+                                       t-att-style="'color: ' + (app.webIcon.color || '#2c2c2c')"/>
+                                </div>
+                            </div>
+
+                            <!-- Clean app caption -->
+                            <div class="o_caption w-100 text-center"
+                                 t-esc="app.label || app.name"/>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Clean no results state -->
+                <div t-else=""
+                     id="result_menu_0"
+                     role="option"
+                     aria-selected="true"
+                     class="o_no_result">
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="fa fa-search fa-2x mb-3"/>
+                        <h5 class="mb-2">No applications found</h5>
+                        <p class="mb-0">Try adjusting your search terms or check your spelling</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="averigo_theme.HomeMenu.CommandPalette.Footer">
+        <div class="o_command_palette_footer d-flex align-items-center justify-content-center">
+            <span class="d-flex align-items-center">
+                <span class="me-2">💡 <strong>TIP:</strong> Open me anywhere with</span>
+                <kbd t-esc="controlKey"/>
+                <span class="mx-1">+</span>
+                <kbd>K</kbd>
+            </span>
+        </div>
+    </t>
+</templates>

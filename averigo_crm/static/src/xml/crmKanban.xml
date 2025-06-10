@@ -4,7 +4,7 @@
      t-inherit-mode="extension" owl="1">
     <xpath expr="//t[@t-set-slot='control-panel-additional-actions']"
            position="inside">
-      <button t-if="env.config.viewType === 'kanban' and env.searchModel.resModel === 'crm.lead'"
+      <button t-if="env.config.viewType === 'kanban' and env.searchModel.resModel === 'crm.lead' and state.isShowEbitda"
               class="btn btn-primary"
               t-on-click="onButtonClick">Show EBITDA</button>
     </xpath>

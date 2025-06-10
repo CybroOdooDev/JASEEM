@@ -12,6 +12,12 @@ class ResPartnerInherit(models.Model):
         compute="_compute_planned_mail_activities")
     close_activities_count = fields.Integer()
 
+    opportunity_count = fields.Integer(
+        string="Opportunity Count",
+        groups='sales_team.group_sale_salesman,base_averigo.averigo_operator_user_group',
+        compute='_compute_opportunity_count',
+    )
+
     def _compute_planned_mail_activities(self):
         """ To get the count of planned activities in customer"""
         for rec in self:
@@ -25,7 +31,7 @@ class ResPartnerInherit(models.Model):
         return {
             'name': _('Planned Activities'),
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'views': [(self.env.ref(
                 'averigo_crm.planned_activity_view_tree').id,
                        'tree'), (self.env.ref(
@@ -44,7 +50,7 @@ class ResPartnerInherit(models.Model):
         return {
             'name': _('Opportunities'),
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'res_model': 'crm.lead',
             'target': 'current',
             'domain': [('partner_id', '=', self.id),
