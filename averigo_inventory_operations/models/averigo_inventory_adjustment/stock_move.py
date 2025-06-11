@@ -12,8 +12,6 @@ class StockMove(models.Model):
     """stock.move is inherited to override product_price_update_before_done function"""
     _inherit = "stock.move"
 
-    cost_price = fields.Float(digits='Product Cost')
-
     product_value = fields.Float(digits='Product Value')
 
     def _should_force_price_unit(self):

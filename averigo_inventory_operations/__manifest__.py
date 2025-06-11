@@ -21,8 +21,9 @@
     ],
     'assets': {
         'web.assets_backend': [
-
-        ]
+            'averigo_inventory_operations/static/src/js/inventry_quantity_adjustment_widget.js',
+            'averigo_inventory_operations/static/src/xml/inventry_quantity_adjustment_widget.xml',
+        ],
     },
     'license': 'AGPL-3',
 }

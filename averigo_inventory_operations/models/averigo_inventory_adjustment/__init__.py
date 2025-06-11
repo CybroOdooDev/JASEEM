@@ -6,3 +6,5 @@ from . import stock_move
 from . import stock_return_picking
 from . import value_adjustment
 from . import cost_history
+from . import stock_quant
+

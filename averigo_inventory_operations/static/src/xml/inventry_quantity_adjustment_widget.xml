@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="averigo_inventory_operations.InventoryQuantAdjustment"
+       owl="1">
+        <input
+                type="text"
+                class="o_field_widget o_field_number o_input"
+                t-att-class="{
+                'o_field_empty': !state.value,
+                'o_field_invalid': true
+            }"
+                t-att-value="state.value"
+                t-on-input="onInput"
+                t-on-blur="onBlur"
+                t-on-keypress="onKeyPress"
+                t-on-paste="onPaste"
+                t-att-placeholder="props.placeholder"
+                t-att-readonly="props.readonly"
+                t-att-disabled="props.readonly"
+                t-att-id="props.id"
+                t-att-name="props.name"
+                autocomplete="off"
+        />
+    </t>
+</templates>

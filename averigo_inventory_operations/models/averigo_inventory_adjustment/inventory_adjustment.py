@@ -55,7 +55,6 @@ class InventoryAdjustment(models.Model):
         help="Set initial counted quantity to stock on hand or zero.")
     product_ids = fields.Many2many(
         'product.product', string='Products',
-        domain=[('product_type', '=', 'product')],
         help="List of products included in this inventory.")
     add_button = fields.Boolean(
         string='Enable Add Button',
@@ -88,17 +87,34 @@ class InventoryAdjustment(models.Model):
     )
 
     stock_quant_ids = fields.One2many(
-        'stock.quantity', 'inventory_id',
-
+        'stock.quant', 'stock_inventory_id',
+        string='Stock Quants',
+        help="Related stock quants for inventory."
     )
 
     @api.depends('warehouse_id')
     def _compute_domain_for_bin_location_ids(self):
-        """Compute bin locations based on warehouse."""
+        """Thi function is used to compute selected bin location based on
+        warehouse"""
+        print("_compute_domain_for_bin_location_ids")
         for rec in self:
-            rec.domain_for_bin_location_ids = self.env['stock.location'].search([
-                ('warehouse_id', '=', rec.warehouse_id.id)
-            ]).ids if rec.warehouse_id else False
+            rec.domain_for_bin_location_ids = False
+            if rec.warehouse_id:
+                rec.domain_for_bin_location_ids = self.env[
+                    'stock.location'].search(
+                    [('warehouse_id', '=', rec.warehouse_id.id),
+                     ('is_bin_location', "=", True)]).ids
+                rec.bin_location_ids = self.env[
+                    'stock.location'].search(
+                    [('warehouse_id', '=', rec.warehouse_id.id),
+                     ('is_bin_location', "=", True)]).ids
+
+                print("Stored value of domain", rec.domain_for_bin_location_ids)
+
+                print("BINNN", self.env[
+                    'stock.location'].search(
+                    [('warehouse_id', '=', rec.warehouse_id.id),
+                     ('is_bin_location', "=", True)]).ids)
 
     @api.model
     def action_delete_draft_inventory(self):
@@ -113,154 +129,94 @@ class InventoryAdjustment(models.Model):
         """Clears the bin location IDs when the warehouse changes."""
         self.bin_location_ids = False
 
+    def action_start_for_quant(self):
+        """This   function used to start the stock quants."""
+
     def action_start(self):
-        """Initialize stock lines for inventory start."""
-        self.stock_lines_ids = [(5, 0, 0)]
-        stock_lines = []
-        Product = self.env['product.product']
-        Quant = self.env['stock.quant']
-        Location = self.env['stock.location']
+        """Initializes the stock lines for inventory start."""
+        self.stock_quant_ids = [(5, 0, 0)]
 
-        products = Product.search([('categ_id', 'in', self.product_category_ids.ids)]) \
-            if self.scan_type == 'product_category_ids' else self.product_ids
+        if self.product_ids and self.scan_type == 'product_ids':
+            for product in self.product_ids:
+                for location in self.bin_location_ids:
+                    self.env['stock.quant'].create({
+                        'stock_inventory_id': self.id,
+                        "product_id": product.id,
+                        "product_categ_id": product.categ_id.id,
+                        "location_id": location.id
 
-        bin_locations = self.bin_location_ids._origin
-        prefill_counted = self.prefill_counted_quantity
-
-        def prepare_line(product, location, on_hand):
-            price = product._origin.standard_price
-            return (0, 0, {
-                'product_code': product.default_code,
-                'product_id': product.id,
-                'prod_lot_id': False,
-                'warehouse_id': self.warehouse_id.id,
-                'location_id': location.id,
-                'product_uom_qty': product.uom_id.id,
-                'standard_price': price,
-                'theoretical_qty': on_hand,
-                'product_qty': on_hand if prefill_counted == 'counted' else 0,
-                'difference_qty': 0 if prefill_counted == 'counted' else -on_hand,
-                'current_value': on_hand * price,
-                'new_value': on_hand * price if prefill_counted == 'counted' else 0,
-                'value_diff': 0 if prefill_counted == 'counted' else -on_hand * price,
-                'qty_changed': prefill_counted == 'zero',
-            })
-
-        if bin_locations and products:
-            for location in bin_locations:
-                quants = Quant.search([('location_id', '=', location.id), ('product_id', 'in', products.ids)])
-                for product in products:
-                    quant = quants.filtered(lambda q: q.product_id == product)
-                    on_hand = sum(quant.mapped('inventory_quantity_auto_apply')) or 0
-                    stock_lines.append(prepare_line(product, location, on_hand))
-
-        elif bin_locations and not products:
-            quants = Quant.search([('location_id', 'in', bin_locations.ids)])
-            for quant in quants:
-                stock_lines.append(
-                    prepare_line(quant.product_id, quant.location_id, quant.inventory_quantity_auto_apply))
-
-        elif self.warehouse_id and not bin_locations and not products:
-            locations = Location.search([('warehouse_id', '=', self.warehouse_id.id), ('is_bin_location', '=', True)])
-            quants = Quant.search([('location_id', 'in', locations.ids)])
-            for quant in quants:
-                stock_lines.append(
-                    prepare_line(quant.product_id, quant.location_id, quant.inventory_quantity_auto_apply))
-
-        elif products and not bin_locations:
-            locations = Location.search([
-                ('warehouse_id', '=', self.warehouse_id.id),
-                ('is_bin_location', '=', True)
-            ], limit=1, order='id desc')
-            for product in products:
-                quants = Quant.search([
-                    ('warehouse_id', '=', self.warehouse_id.id),
-                    ('product_id', '=', product.id)
-                ])
-                on_hand = sum(quants.mapped('inventory_quantity_auto_apply')) or 0
-                location = quants[0].location_id if quants else locations
-                stock_lines.append(prepare_line(product, location, on_hand))
-
-        if stock_lines:
-            self.stock_lines_ids = stock_lines
-            self.state = 'confirm'
+                    })
+        self.state = 'confirm'
 
     def action_qty_validate_inventory(self):
-        """Validates inventory by updating quantities and creating stock moves."""
-        Quant = self.env['stock.quant']
-        for line in self.stock_lines_ids.filtered(lambda l: l.qty_changed):
-            line.product_id._compute_quantities()
-            quant_vals = {
-                'warehouse_id': line.warehouse_id.id,
-                'product_id': line.product_id.id,
-                'product_uom_qty': line.product_uom_qty.id,
-                'location_id': line.location_id.id,
-                'quantity': line.product_qty,
-                'inventory_quantity': 0,
-                'reserved_quantity': 0,
-                'inventory_diff_quantity': -line.product_qty,
-                'value': line.new_value,
-                'on_hand': True,
-                'company_id': self.env.company.id,
-            }
-            quant = Quant.create(quant_vals)
-            stock_move_vals = quant._get_inventory_move_values(
-                qty=line.product_qty,
-                location_dest_id=line.location_id,
-                location_id=self.env.ref('stock.stock_location_stock')
-            )
-            stock_move_vals['reference'] = f'INV {self.name}'
-            move = self.env['stock.move'].create(stock_move_vals)
-            move.state = 'done'
+        """Validates the inventory by updating quantities and creating
+        stock moves."""
+        for rec in self.stock_lines_ids:
+            if rec.qty_changed:
+                rec.product_id._compute_quantities()
+                quant_vals = {
+                    'warehouse_id': rec.warehouse_id.id,
+                    'product_id': rec.product_id.id,
+                    'product_uom_qty': rec.product_uom_qty.id,
+                    'location_id': rec.location_id.id,
+                    'quantity': rec.product_qty,
+                    'inventory_quantity': 0,
+                    'reserved_quantity': 0,
+                    'inventory_diff_quantity': 0 - rec.product_qty,
+                    'value': rec.new_value,
+                    'on_hand': True,
+                    'company_id': self.env.company.id,
+                }
+                stock_quant = self.env['stock.quant'].create(quant_vals)
+                move_lines_to_pack = self.env['stock.location'].search(
+                    [('id', '=', 14)])
+                stock_move = stock_quant._get_inventory_move_values(
+                    qty=rec.product_qty,
+                    location_dest_id=rec.location_id,
+                    location_id=move_lines_to_pack)
+                stock_move['reference'] = ('INV %s', self.name)
+                move = self.env['stock.move'].create(stock_move)
+                move.state = 'done'
         self.state = 'done'
 
     def action_get_product_move(self):
-        """View product moves related to current inventory."""
+        """Retrieves the action to view product moves related to the current inventory."""
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_line_action")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "stock.stock_move_line_action")
         action['domain'] = [('product_id', 'in', self.product_ids.ids)]
         return action
 
     def action_validate(self):
-        """Validates inventory adjustment."""
+        """Validates the inventory adjustment."""
+        if not self.exists():
+            return
         self.ensure_one()
-        if not self.env.user.has_group('base_averigo.averigo_operator_user_group'):
-            raise UserError(_("Only a stock manager can validate an inventory adjustment."))
+        if not self.env.user.has_group(
+                'base_averigo.averigo_operator_user_group'):
+            raise UserError(
+                _("Only a stock manager can validate an inventory adjustment."))
         if self.state != 'confirm':
-            raise UserError(_("Inventory '%s' is either already validated or not ready.") % self.name)
+            raise UserError(
+                _("You can't validate the inventory '%s', maybe this inventory has been already validated or isn't ready.") % self.name)
 
-        if not self.stock_lines_ids:
-            raise UserError(_("No product selected. Please add a product."))
-
-        quants = self.env['stock.quant'].search([
-            ('product_id', 'in', self.stock_lines_ids.mapped('product_id').ids),
-            ('warehouse_id', '=', self.warehouse_id.id)
-        ])
-        for line in self.stock_lines_ids:
-            quant = quants.filtered(lambda q: q.product_id == line.product_id)
-            if quant:
-                quant.write({'quantity': line.product_qty})
-            else:
-                self.env['stock.quant'].create({
-                    'product_id': line.product_id.id,
-                    'warehouse_id': self.warehouse_id.id,
-                    'location_id': line.location_id.id,
-                    'quantity': line.product_qty,
-                })
+        for rec in self.stock_quant_ids:
+            print("recccc",rec)
+            rec.action_apply_inventory()
         self._action_done()
         self.stock_lines_ids._check_company()
         self._check_company()
         return True
 
     def _action_done(self):
-        """Finalize inventory and post entries."""
-        negative = next((line for line in self.stock_lines_ids if
-                         line.product_qty < 0 and line.product_qty != line.theoretical_qty), False)
+        """Completes the inventory process by checking for negative quantities and finalizing the inventory."""
+        negative = next((line for line in self.mapped('stock_lines_ids') if
+                         line.product_qty < 0 and line.product_qty != line.theoretical_qty),
+                        False)
         if negative:
             raise UserError(
-                _('Negative quantity not allowed:\n%s - qty: %s') % (
+                _('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s') % (
                     negative.product_id.name, negative.product_qty))
-
         self.action_check()
         self.move_ids.state = 'done'
         self.write({'state': 'done'})
