@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="averigo_seq_quotation" model="ir.sequence">
+            <field name="name">Averigo Sequence Quotation</field>
+            <field name="code">sale.quotation</field>
+            <field name="prefix">Q</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="True"/>
+        </record>
+
+        <record id="averigo_seq_sale_order" model="ir.sequence">
+            <field name="name">Averigo Sequence Sale Order</field>
+            <field name="code">sale.order.operator</field>
+            <field name="prefix">S</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="True"/>
+        </record>
+
+
+    </data>
+</odoo>

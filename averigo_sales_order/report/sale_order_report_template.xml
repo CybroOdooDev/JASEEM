@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="sale.report_saleorder_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <div class="row">
+                    <t t-set="date_format" t-value="'%m/%d/%Y'"/>
+                    <t t-set="date_format" t-value="doc.company_id.date_format_selection"
+                       t-if="doc.company_id.date_format_selection"/>
+                    <t t-set="time_format" t-value="'%H:%M:%S'"/>
+                    <t t-set="time_format" t-value="doc.company_id.time_format_selection"
+                       t-if="doc.company_id.time_format_selection"/>
+                    <div class="col-12 d-flex justify-content-end">
+                        <div t-attf-class="#{'col-5' if report_type != 'html' else 'col-12 col-md-5'}">
+                            <t t-if="doc.state not in ['draft','sent']">
+                                <strong style="padding-left:50%;font-size:larger">Sales Order</strong>
+                            </t>
+                            <t t-if="doc.state in ['draft','sent']">
+                                <strong style="padding-left:50%;font-size:larger">Quotation</strong>
+                            </t>
+                            <table class="table table-sm table-bordered"
+                                   style="border:1px solid black; border-collapse: collapse;">
+                                <thead>
+                                    <th style="border:1px solid black; border-collapse: collapse;font-weight: bold;"
+                                        class="text-center">
+                                        <t t-if="doc.date_order and doc.state not in ['draft','sent']">
+                                            Order Date
+                                        </t>
+                                        <t t-if="doc.date_order and doc.state in ['draft','sent']">
+                                            Quotation Date
+                                        </t>
+                                    </th>
+                                    <th style="border:1px solid black; border-collapse: collapse;font-weight: bold;"
+                                        class="text-center">
+                                        <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
+                                            <span t-if="doc.state not in ['draft','sent']">
+                                                Order #
+                                            </span>
+                                            <span t-if="doc.state in ['draft','sent']">
+                                                Quotation #
+                                            </span>
+                                        </t>
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="border:1px solid black; border-collapse: collapse;">
+                                            <t t-esc="doc.date_order.strftime(date_format + ' ' + time_format)"/>
+                                        </td>
+                                        <td style="border:1px solid black; border-collapse: collapse;">
+                                            <span t-field="doc.name"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <table class="table table-sm table-bordered"
+                           style="border:1px solid black; border-collapse: collapse;">
+                        <thead>
+                            <th style="border:1px solid black; border-collapse: collapse;font-weight: bold;"
+                                class="text-center">Bill To:
+                            </th>
+                            <th style="border:1px solid black; border-collapse: collapse;font-weight: bold;"
+                                class="text-center">Ship To:
+                            </th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border:1px solid black; border-collapse: collapse;width:50%">
+                                    <t t-if="doc.partner_invoice_id.name">
+                                        <span t-esc="doc.partner_invoice_id.name"/>
+                                    </t>
+                                    <br/>
+                                    <t t-if="doc.partner_invoice_id.street">
+                                        <span t-esc="doc.partner_invoice_id.street"/>
+                                    </t>
+                                    <br/>
+                                    <t t-if="doc.partner_invoice_id.street2">
+                                        <span t-esc="doc.partner_invoice_id.street2"/>
+                                    </t>
+                                    <t t-if="doc.partner_invoice_id.zip or doc.partner_invoice_id.city or doc.partner_invoice_id.state_id">
+                                        <t t-if="doc.partner_invoice_id.city">
+                                            <span t-esc="doc.partner_invoice_id.city"/>
+                                        </t>&#160;
+                                        <t t-if="doc.partner_invoice_id.state_id">
+                                            <span t-esc="doc.partner_invoice_id.state_id.code"/>
+                                        </t>&#160;
+                                        <t t-if="doc.partner_invoice_id.zip">
+                                            <span t-esc="doc.partner_invoice_id.zip"/>
+                                        </t>
+                                    </t>
+                                </td>
+                                <td style="border:1px solid black; border-collapse: collapse;">
+                                    <t t-if="doc.partner_shipping_id.name">
+                                        <span t-esc="doc.partner_shipping_id.name"/>
+                                    </t>
+                                    <br/>
+                                    <t t-if="doc.partner_shipping_id.street">
+                                        <span t-esc="doc.partner_shipping_id.street"/>
+                                    </t>
+                                    <br/>
+                                    <t t-if="doc.partner_shipping_id.street2">
+                                        <span t-esc="doc.partner_shipping_id.street2"/>
+                                    </t>
+                                    <t t-if="doc.partner_shipping_id.zip or doc.partner_shipping_id.city or doc.partner_shipping_id.state_id">
+                                        <t t-if="doc.partner_shipping_id.city">
+                                            <span t-esc="doc.partner_shipping_id.city"/>
+                                        </t>&#160;
+                                        <t t-if="doc.partner_shipping_id.state_id">
+                                            <span t-esc="doc.partner_shipping_id.state_id.name"/>
+                                        </t>&#160;
+                                        <t t-if="doc.partner_shipping_id.zip">
+                                            <span t-esc="doc.partner_shipping_id.zip"/>
+                                        </t>
+                                    </t>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <th style="border:1px solid black; border-collapse: collapse;font-weight: bold;"
+                                class="text-center">PO #
+                            </th>
+                            <th style="border:1px solid black; border-collapse: collapse;font-weight: bold;"
+                                class="text-center">TERMS
+                            </th>
+                            <th style="border:1px solid black; border-collapse: collapse;font-weight: bold;"
+                                class="text-center">Route Driver
+                            </th>
+                            <th style="border:1px solid black; border-collapse: collapse;font-weight: bold;"
+                                class="text-center">SALE DATE
+                            </th>
+                            <th style="border:1px solid black; border-collapse: collapse;font-weight: bold;"
+                                class="text-center">VIA
+                            </th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border:1px solid black; border-collapse: collapse;">
+                                    <t t-if="doc.po_no">
+                                        <span t-field="doc.po_no"/>
+                                    </t>
+                                </td>
+                                <td style="border:1px solid black; border-collapse: collapse;">
+                                    <t t-if="doc.payment_term_id">
+                                        <span t-field="doc.payment_term_id.name"/>
+                                    </t>
+                                </td>
+                                <td style="border:1px solid black; border-collapse: collapse;">
+                                    <t>
+                                        <!--                                        <span t-field="doc.date_order"/>-->
+                                    </t>
+                                </td>
+                                <td style="border:1px solid black; border-collapse: collapse;">
+                                    <t t-if="doc.date_order">
+                                        <t t-esc="doc.date_order.strftime(date_format + ' ' + time_format)"/>
+                                    </t>
+                                </td>
+                                <td style="border:1px solid black; border-collapse: collapse;">
+                                    <t>
+                                        <!--                                        <span t-field="doc.date_order"/>-->
+                                    </t>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <div id="informations">
+                        <div t-if="doc.client_order_ref"
+                             class="col-auto mw-100 mb-2">
+                            <strong>Your Reference:</strong>
+                            <p class="m-0" t-field="doc.client_order_ref"/>
+                        </div>
+                        <div t-if="doc.validity_date and doc.state in ['draft', 'sent']"
+                             class="col-auto mw-100 mb-2"
+                             name="expiration_date">
+                            <strong>Expiration:</strong>
+                            <p class="m-0"
+                               t-esc="doc.validity_date.strftime(date_format + ' ' + time_format)"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Is there a discount on at least one line? -->
+                <t t-set="display_discount"
+                   t-value="any([l.discount for l in doc.order_line])"/>
+                <div class="row">
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <th name="th_code" class="text-center"
+                                style="border:1px solid black; border-collapse: collapse;font-weight: bold;">
+                                Product Code
+                            </th>
+                            <th name="th_description" class="text-center"
+                                style="border:1px solid black; border-collapse: collapse;font-weight: bold;">
+                                Product Name
+                            </th>
+                            <th name="th_uom" class="text-center"
+                                style="border:1px solid black; border-collapse: collapse;font-weight: bold;">
+                                UOM
+                            </th>
+                            <th name="th_quantity" class="text-center"
+                                style="border:1px solid black; border-collapse: collapse;font-weight: bold;">
+                                Quantity
+                            </th>
+                            <th name="th_priceunit" class="text-center"
+                                style="border:1px solid black; border-collapse: collapse;font-weight: bold;">
+                                Price
+                            </th>
+                            <th name="th_subtotal" class="text-center"
+                                style="border:1px solid black; border-collapse: collapse;font-weight: bold;">
+                                Amount
+                            </th>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <t t-foreach="doc.order_line" t-as="line">
+                                <tr>
+                                    <t t-if="not line.display_type">
+                                        <td name="td_code"
+                                            style="border:1px solid black; border-collapse: collapse;">
+                                            <span t-field="line.product_id.default_code"/>
+                                        </td>
+                                        <td name="td_name"
+                                            style="border:1px solid black; border-collapse: collapse;">
+                                            <span t-field="line.name"/>
+                                            <t t-if="doc.show_cp_code">
+                                                <br/>
+                                                <br/>
+                                                <t t-if="line.cp_code">
+                                                    <span t-field="line.cp_code"/>
+                                                </t>
+                                            </t>
+                                        </td>
+                                        <td name="td_uom"
+                                            style="border:1px solid black; border-collapse: collapse;">
+                                            <span t-field="line.product_uom.name"/>
+                                        </td>
+                                        <td name="td_quantity"
+                                            class="text-right"
+                                            style="border:1px solid black; border-collapse: collapse;">
+                                            <span t-field="line.product_uom_qty"/>
+                                            <span t-field="line.product_uom"
+                                                  groups="uom.group_uom"/>
+                                        </td>
+                                        <td name="td_priceunit"
+                                            class="text-right"
+                                            style="border:1px solid black; border-collapse: collapse;">
+                                            <span t-field="line.unit_price"/>
+                                        </td>
+                                        <td name="td_subtotal"
+                                            class="text-right o_price_total"
+                                            style="border:1px solid black; border-collapse: collapse;">
+                                            <span t-field="line.price_subtotal"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row" style="width:100%;">
+                    <table class="table table-sm table-bordered col w-50">
+                        <tr>
+                            <th style="border:1px solid black;padding-bottom:48px;font-weight: bold;">
+                                Delivered By :
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="border:1px solid black;padding-bottom:48px;font-weight: bold;">
+                                Received By :
+                            </th>
+                        </tr>
+                        <tr style="height:2cm !important;">
+                            <th style="border:1px solid black;padding-bottom:3%;font-weight: bold;">
+                                Date :
+                                <br/>
+                            </th>
+                        </tr>
+                        <tr style="height:2cm !important;">
+                            <th style="border:1px solid black;padding-bottom:48px;font-weight: bold;">
+                                Received By (Sign) :
+                            </th>
+                        </tr>
+                    </table>
+                    <table class="table table-sm table-bordered col w-50 "
+                           style="width:420px !important; height:358px !important">
+                        <tr>
+                            <th style="border:1px solid black;font-weight: bold;border-left:1px white; border-collapse: collapse; height:1cm !important;">
+                                Subtotal :
+                            </th>
+                            <td class="text-right"
+                                style="border:1px solid black; border-collapse: collapse; height:1cm !important">
+                                <span t-field="doc.amount_untaxed"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="border:1px solid black;border-left:1px white;font-weight: bold;border-collapse: collapse;height:1cm !important">
+                                S &amp; H :
+                            </th>
+                            <td class="text-right"
+                                style="border:1px solid black; border-collapse: collapse;height:1cm !important">
+                                <span t-field="doc.shipping_handling"
+                                      t-options="{'widget':'monetary','display_currency':env.company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="border:1px solid black;border-left:1px white;font-weight: bold;border-collapse: collapse;height:1cm !important">
+                                Tax Amount :
+                            </th>
+                            <td class="text-right"
+                                style="border:1px solid black; border-collapse: collapse;height:1cm !important">
+                                <span t-field="doc.tax_amount_view"
+                                      t-options="{'widget':'monetary','display_currency':env.company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="border:1px solid black;border-left:1px white;font-weight: bold;border-collapse: collapse;height:1cm !important">
+                                Container Deposit Amount :
+                            </th>
+                            <td class="text-right"
+                                style="border:1px solid black; border-collapse: collapse;height:1cm !important">
+                                <span t-field="doc.container_deposit_view"
+                                      t-options="{'widget':'monetary','display_currency':env.company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="border:1px solid black;border-left:1px white;font-weight: bold;border-collapse: collapse;height:1cm !important">
+                                Insurance :
+                            </th>
+                            <td class="text-right"
+                                style="border:1px solid black; border-collapse: collapse;height:1cm !important">
+                                <span t-field="doc.insurance"
+                                      t-options="{'widget':'monetary','display_currency':env.company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="border:1px solid black; border-left:1px white;font-weight: bold;border-collapse: collapse;height:1cm !important">
+                                Discount :
+                            </th>
+                            <td class="text-right"
+                                style="border:1px solid black; border-collapse: collapse;height:1cm !important">
+                                <span t-field="doc.total_discount_view"
+                                      t-options="{'widget':'monetary','display_currency':env.company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="border:1px solid black; border-left:1px white;font-weight: bold;border-collapse: collapse;height:1cm !important">
+                                Total :
+                            </th>
+                            <td class="text-right"
+                                style="border-color:white;border-right:1px solid black;border-bottom:1px solid black; height:1cm !important">
+                                <span t-field="doc.amount_total"
+                                      t-options="{'widget':'monetary','display_currency':env.company.currency_id}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <strong>Notes :</strong>
+                </div>
+                <div t-if="doc.signature" class="mt32 ml64 mr4"
+                     name="signature">
+                    <div class="offset-8">
+                        <strong>Signature</strong>
+                    </div>
+                    <div class="offset-8">
+                        <img t-att-src="image_data_uri(doc.signature)"
+                             style="max-height: 4cm; max-width: 8cm;"/>
+                    </div>
+                    <div class="offset-8 text-center">
+                        <p t-field="doc.signed_by"/>
+                    </div>
+                </div>
+                <span name="order_note"/>
+                <div class="oe_structure"/>
+                <p t-field="doc.note"/>
+                <p t-if="doc.payment_term_id.note">
+                    <span t-field="doc.payment_term_id.note"/>
+                </p>
+            </div>
+        </t>
+    </template>
+</odoo>

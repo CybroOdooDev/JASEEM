@@ -1,0 +1,36 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'Averigo Sales Order',
+    'version': '18.0.1.0.0',
+    'category': '',
+    'summary': 'Sales Order Module For Averigo',
+    'description': """This module setups the sales order for Averigo.""",
+    'author': 'Cybrosys Techno Solutions',
+    'company': 'Cybrosys Techno Solutions',
+    'maintainer': 'Cybrosys Techno Solutions',
+    'website': 'https://www.cybrosys.com',
+    'depends': ['sale_management', 'sale_stock', 'averigo_base_customer',
+                'averigo_product_catalog'],
+    'data': ['data/data.xml',
+             'data/ir_ui_menus.xml',
+             'security/ir.model.access.csv',
+             'security/security_rules.xml',
+             'views/order_type_views.xml',
+             'views/res_partner_views.xml',
+             'views/sale_order_views.xml',
+             'wizard/product_confirmation_wizard_views.xml',
+             'report/sale_order_report_template.xml',
+             ],
+    'assets': {
+        'web.assets_backend': [
+            'averigo_sales_order/static/src/js/button_box_scroll.js',
+            'averigo_sales_order/static/src/js/One2ManyWidget.js',
+            'averigo_sales_order/static/src/xml/One2ManyWidget.xml',
+            # 'averigo_sales_order/static/src/scss/navigateOne2many.scss'
+        ],
+    },
+    'license': 'AGPL-3',
+    'installable': True,
+    'auto_install': False,
+    'application': False,
+}
