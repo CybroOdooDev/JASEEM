@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ImagePreviewWidget">
+        <div>
+            <t t-if="previewSrc">
+                <a t-att-href="previewSrc" data-fancybox="gallery">
+                    <t t-if="displayMode === 'image'">
+                        <img t-att-src="previewSrc" alt="Image Preview" width="150" height="150"/>
+                    </t>
+                    <t t-elif="displayMode === 'icon'">
+                        <i t-att-class="iconClass" style="font-size: 24px; cursor: pointer;"/>
+                    </t>
+                </a>
+            </t>
+            <t t-else="">
+                <span>No Image</span>
+            </t>
+        </div>
+    </t>
+</templates>

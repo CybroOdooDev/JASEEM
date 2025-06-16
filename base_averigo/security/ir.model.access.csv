@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_zip_county,access.zip.county,model_zip_county,base_averigo.averigo_operator_user_group,1,1,1,1
+access_res_company,access.res.company,base.model_res_company,base_averigo.averigo_operator_user_group,1,1,1,1
+access_res_users,access.res.users,base.model_res_users,base_averigo.averigo_operator_user_group,1,1,1,1
+access_ir_actions_act_window,access.ir.actions.act_window,base.model_ir_actions_act_window,base_averigo.averigo_operator_user_group,1,1,1,1
+access_ir_actions_act_window_view,access.ir.actions.act_window.view,base.model_ir_actions_act_window_view,base_averigo.averigo_operator_user_group,1,1,1,1
+access_ir_model,access.ir.model,base.model_ir_model,base_averigo.averigo_operator_user_group,1,1,1,1
+access_ir_model_access,access.ir.model.access,base.model_ir_model_access,base_averigo.averigo_operator_user_group,1,1,1,1
+access_ir_cron,access.ir.cron,base.model_ir_cron,base_averigo.averigo_operator_user_group,1,1,1,1
+access_ir_actions_server,access.ir.actions.server,base.model_ir_actions_server,base_averigo.averigo_operator_user_group,1,1,1,1
+access_ir_model_fields,access.ir.model.fields,base.model_ir_model_fields,base_averigo.averigo_operator_user_group,1,1,1,1
+access_ir_model_fields_selection,access.ir.model.fields.selection,base.model_ir_model_fields_selection,base_averigo.averigo_operator_user_group,1,1,1,1
+access_ir_rule,access.ir.rule,base.model_ir_rule,base_averigo.averigo_operator_user_group,1,1,1,1
+access_res_groups,access.res.groups,base.model_res_groups,base_averigo.averigo_operator_user_group,1,1,1,1

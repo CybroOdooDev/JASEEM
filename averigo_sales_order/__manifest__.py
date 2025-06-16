@@ -24,9 +24,6 @@
     'assets': {
         'web.assets_backend': [
             'averigo_sales_order/static/src/js/button_box_scroll.js',
-            'averigo_sales_order/static/src/js/One2ManyWidget.js',
-            'averigo_sales_order/static/src/xml/One2ManyWidget.xml',
-            # 'averigo_sales_order/static/src/scss/navigateOne2many.scss'
         ],
     },
     'license': 'AGPL-3',

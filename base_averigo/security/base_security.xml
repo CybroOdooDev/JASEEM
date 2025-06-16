@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="base.res_users_rule" model="ir.rule">
+            <field name="name">Res User Company Rule</field>
+            <field name="model_id" ref="model_res_users"/>
+            <field name="groups" eval="[(4, ref('averigo_operator_user_group'))]"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="admin_users_rule" model="ir.rule">
+            <field name="name">Averigo Admin Rule</field>
+            <field name="model_id" ref="model_res_users"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('averigo_admin_backend_group'))]"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+
+        <!--Function to set no update=True in id res_users_rule of model base-->
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('name', '=', 'res_users_rule'), ('module', '=', 'base')]"/>
+            </function>
+            <value eval="{'noupdate': True}"/>
+        </function>
+    </data>
+</odoo>
+

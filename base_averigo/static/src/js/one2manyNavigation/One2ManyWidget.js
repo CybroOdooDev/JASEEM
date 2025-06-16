@@ -36,7 +36,7 @@ export class NavigateOne2Many extends X2ManyField {
         });
     }
 
-    updateTableData() {http://googlmeet.google.com/qnm-jqbi-mja
+    updateTableData() {
         this._list = this.getList();
         this._columns = this.getColumns();
         this._rows = this.getRows();

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="BooleanButtonWidget">
+        <button t-on-click="handleClick" t-ref="inputConfirm" class="btn btn-primary" style="padding: 5px 5px; margin-top: 1px">
+            <t t-esc="label"/>
+        </button>
+    </t>
+</templates>

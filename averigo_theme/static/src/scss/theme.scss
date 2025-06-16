@@ -40,6 +40,17 @@ body {
             border: none;
         }
     }
+    .o_field_widget.o_readonly_modifier.o_field_many2one{
+        border-radius: 4px;
+        height: 45px;
+        padding: 14px 18px !important;
+        &:hover{
+            border: none;
+        }
+        &:focus{
+            border: none;
+        }
+    }
     .o_wrap_input{
         .o_field_widget.o_readonly_modifier {
             border-radius: 4px;

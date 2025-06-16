@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="mail.menu_root_discuss" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(5, 0, 0), (4, ref('base.group_no_one'))]"/>
+        </record>
+        <record id="base.menu_management" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(5, 0, 0), (4, ref('base.group_no_one'))]"/>
+        </record>
+
+        <!--Setting menu to setup-->
+        <record id="base.menu_administration" model="ir.ui.menu">
+            <field name="name">Setup</field>
+            <field name="groups_id"
+                   eval="[(5, 0, 0), (4, ref('base_averigo.averigo_operator_user_group'))]"/>
+            <field name="web_icon">base_averigo,static/description/settings_icon.png</field>
+        </record>
+        <record id="base_setup.menu_config" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(5, 0, 0), (4, ref('base.group_no_one'))]"/>
+        </record>
+        <record id="base.menu_config" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(5, 0, 0), (4, ref('base.group_no_one'))]"/>
+        </record>
+        <record id="base.menu_users" model="ir.ui.menu">
+            <field name="groups_id"
+                   eval="[(5, 0, 0), (4, ref('base.group_no_one'))]"/>
+        </record>
+
+
+
+        <!--Function to set no update=False in id res_users_rule of model base-->
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('name', '=', 'res_users_rule'), ('module', '=', 'base')]"/>
+            </function>
+            <value eval="{'noupdate': False}"/>
+        </function>
+
+    </data>
+</odoo>
