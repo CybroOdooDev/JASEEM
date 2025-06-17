@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_res_app_users,access.res.app.users,model_res_app_users,base_averigo.averigo_admin_backend_group,1,1,1,1
+

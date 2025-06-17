@@ -99,14 +99,14 @@ export class NavigateOne2Many extends X2ManyField {
             case "ArrowUp":
                 if (this.currentRow > 0) {
                     this.currentRow--;
-                    this.currentCol = this.findFirstEditableColumn(this.currentRow);
+                    // Keep the same column index; focusCell will handle if it's not editable
                     this.focusCell();
                 }
                 break;
             case "ArrowDown":
                 if (this.currentRow < rows.length - 1) {
                     this.currentRow++;
-                    this.currentCol = this.findFirstEditableColumn(this.currentRow);
+                    // Keep the same column index; focusCell will handle if it's not editable
                     this.focusCell();
                 }
                 break;
@@ -156,6 +156,40 @@ export class NavigateOne2Many extends X2ManyField {
         if (!cell) {
             console.warn(`Cell not found for row ${this.currentRow}, column ${colName}`);
             return;
+        }
+
+        // If the cell is readonly, find the nearest editable column in the same row
+        if (cell.classList.contains("o_readonly_modifier")) {
+            let newColIndex = -1;
+            let leftIndex = this.currentCol - 1;
+            let rightIndex = this.currentCol + 1;
+
+            while (leftIndex >= 0 || rightIndex < cols.length) {
+                if (leftIndex >= 0) {
+                    const leftColName = cols[leftIndex].dataset.name;
+                    const leftCell = row.querySelector(`td[name="${leftColName}"]`);
+                    if (leftCell && !leftCell.classList.contains("o_readonly_modifier")) {
+                        newColIndex = leftIndex;
+                        break;
+                    }
+                    leftIndex--;
+                }
+                if (rightIndex < cols.length) {
+                    const rightColName = cols[rightIndex].dataset.name;
+                    const rightCell = row.querySelector(`td[name="${rightColName}"]`);
+                    if (rightCell && !rightCell.classList.contains("o_readonly_modifier")) {
+                        newColIndex = rightIndex;
+                        break;
+                    }
+                    rightIndex++;
+                }
+            }
+
+            if (newColIndex !== -1) {
+                this.currentCol = newColIndex;
+                this.focusCell(); // Recursively call focusCell with the new column
+                return;
+            }
         }
 
         // Find focusable element within the cell
