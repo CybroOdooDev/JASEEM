@@ -1,13 +1,25 @@
-.o_field_x2many_list .o_data_cell.o_cell_focused {
-    outline: 2px solid #007bff;
-    background-color: #e6f3ff;
-    transition: outline 0.2s ease, background-color 0.2s ease;
+.selected-cell {
+    background-color: #e3f2fd !important;
+    border: 2px solid #2196f3 !important;
+    box-shadow: 0 0 0 1px #2196f3 inset !important;
+    position: relative;
 }
 
-.o_field_x2many_list .o_data_cell:focus {
-    outline: none;
+.selected-cell[data-keyboard-hint]:after {
+    content: attr(data-keyboard-hint);
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+    background: #333;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    z-index: 1000;
 }
 
-.o_field_x2many_list .o_data_cell:not(.o_readonly_modifier) {
-    cursor: pointer;
+.o_keyboard_navigation .selected-cell {
+    outline: 2px solid #1976d2;
+    outline-offset: -2px;
 }

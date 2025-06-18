@@ -37,9 +37,9 @@ class CustomerSaleOrder(models.Model):
         'hr.employee', string='Accounts Manager')
     partner_id = fields.Many2one(
         'res.partner', string='Customer', required=True,
-        change_default=True,
-        index=True, tracking=1, domain="[('type', 'in', ['contact', 'portal']),"
-                                       "('is_customer', '=', True)]")
+        change_default=True,index=True, tracking=1,
+        domain="[('type', 'in', ['contact', 'portal']),"
+               "('is_customer', '=', True)]")
     commitment_date = fields.Datetime(
         'Delivery Date', copy=False, readonly=True,
         help="This is the delivery date promised to the customer. "
@@ -716,8 +716,58 @@ class CustomerSaleOrder(models.Model):
         values = self._prepare_delivery_line_vals(carrier, unit_price)
         return self.env['sale.order.line'].sudo().create(values)
 
+    def action_view_invoice(self):
+        """ Smart button action to view invoice associated with sale order"""
+        invoices = self.mapped('invoice_ids')
+        action = self.env.ref(
+            'averigo_accounting.action_account_move_invoice').read()[0]
+        if len(invoices) > 1:
+            action['domain'] = [('id', 'in', invoices.ids)]
+        elif len(invoices) == 1:
+            form_view = [(self.env.ref(
+                'averigo_accounting.view_account_move_invoice_form').id,
+                          'form')]
+            if 'views' in action:
+                action['views'] = form_view + \
+                                  [(state, view)
+                                   for state, view in action['views'] if
+                                   view != 'form']
+            else:
+                action['views'] = form_view
+            action['res_id'] = invoices.id
+        else:
+            action = {'type': 'ir.actions.act_window_close'}
+        context = {'default_type': 'out_invoice', }
+        if len(self) == 1:
+            context.update({
+                'default_partner_id': self.partner_id.id,
+                'default_partner_invoice_id': self.partner_invoice_id.id,
+                'default_partner_shipping_id': self.partner_shipping_id.id,
+                'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or
+                                                   self.env[
+                                                       'account.move'].default_get(
+                                                       ['invoice_payment_term_id']).get(
+                                                       'invoice_payment_term_id'),
+                'default_invoice_origin': self.mapped('name'),
+                'default_user_id': self.user_id.id,
+                'create': False,
+            })
+        action['context'] = context
+        return action
+
+    def _update_invoice_narration(self):
+        for rec in self:
+            invoices = self.env['account.move'].sudo().search([
+                ('sale_id', '=', rec.id),
+                ('move_type', '=', 'out_invoice'),
+                ('state', '!=', 'cancel')
+            ])
+            for invoice in invoices:
+                invoice.narration = rec.note
     def write(self, values):
         res = super(CustomerSaleOrder, self).write(values)
+        if 'note' in values:
+            self._update_invoice_narration()
         if self.env.context.get('params', {}).get(
                 'view_type') == 'form' and 'tax_rate_is' not in values and 'tax_calc' not in values:
             for rec in self:
@@ -1177,7 +1227,8 @@ class SaleOrderLine(models.Model):
                 line.order_id.tax_amount_view += line.tax_price
                 line.tax_amount_unit = line.tax_price
                 line.diff_tax_amount = line.tax_price
-            line.container_deposit_amount = line.product_uom_qty * line.product_id.container_deposit_amount if line.product_id.is_container_tax else 0
+            uom_qty = 1 / line.product_uom.factor
+            line.container_deposit_amount = uom_qty * line.product_uom_qty * line.product_id.container_deposit_amount if line.product_id.is_container_tax else 0
             line.order_id.container_deposit_view = line.order_id.total_container_deposit
         return res
 

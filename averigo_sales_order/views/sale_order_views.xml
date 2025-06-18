@@ -107,6 +107,18 @@
                                 <span class="o_stat_text">Preview</span>
                             </div>
                         </button>
+                        <button name="action_view_invoice" type="object"
+                                invisible="invoice_count == 0"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_info o_stat_value">
+                                    <field name="invoice_count" nolabel="1"
+                                           widget="statinfo"/>
+                                </span>
+                                <span class="o_stat_text">Invoices</span>
+                            </div>
+                        </button>
                     </div>
                     <div class="row mt-2 mb-2">
                         <div class="col-12 col-md-9">
@@ -246,9 +258,7 @@
                             </group>
                             <field name="cus_product_associate" invisible="1"/>
                             <field name="order_line" mode="list"
-                                   readonly="state in ('done','cancel') and is_closed != False"
-                                    widget="navigate_one2many"
-                            >
+                                   readonly="state in ('done','cancel') and is_closed != False" widget="navigate_one2many">
                                 <form>
                                     <field name="display_type" invisible="1"/>
                                     <!--
@@ -459,7 +469,8 @@
                                            readonly="qty_delivered > 0"/>
                                     <field name="tax_status" readonly="1"
                                            force_save="1"/>
-                                    <field name="product_available_qty" widget="integer"/>
+                                    <field name="product_available_qty"
+                                           widget="integer"/>
                                     <field name="customer_lead" optional="hide"
                                            column_invisible="1"/>
                                     <field name="unit_price"

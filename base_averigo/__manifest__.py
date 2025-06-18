@@ -33,6 +33,7 @@
             "base_averigo/static/src/js/passwordEyeIconWidget/passwordEyeIconWidget.xml",
             'base_averigo/static/src/js/one2manyNavigation/One2ManyWidget.js',
             'base_averigo/static/src/js/one2manyNavigation/One2ManyWidget.xml',
+            'base_averigo/static/src/js/one2manyNavigation/navigateOne2many.scss',
         ],
     },
     'license': 'AGPL-3',

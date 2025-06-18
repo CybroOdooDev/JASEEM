@@ -1,201 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
-    <!--Action to do nothing because the button will call the js function navigateToProductList-->
-    <record id="product_list" model="ir.actions.server">
-        <field name="name">Do Nothing</field>
-        <field name="model_id" ref="averigo_sales_order.model_res_partner"/>
-        <field name="state">code</field>
-        <field name="code"># No operation</field>
-    </record>
-
-    <!--inherit res_partner view to associate products and place products smart button-->
+    <!--inherit res_partner view to sale order smart button-->
     <record id="view_res_customers_form_inherit" model="ir.ui.view">
         <field name="name">res.partner.form.inherit</field>
         <field name="model">res.partner</field>
         <field name="inherit_id"
                ref="averigo_base_customer.res_partner_view_form_customer"/>
         <field name="arch" type="xml">
-            <xpath expr="//sheet" position="inside">
-                <field name="show_cp_code" invisible="1"/>
-            </xpath>
             <xpath expr="//button[@name='action_child_list']"
                    position="before">
-                <button type="action" name="%(product_list)d"
-                        onclick="navigateToProductList()"
-                        icon="fa-info-circle" class="oe_stat_button">
-                    <field name="product_count" string="Products"
+                <button class="oe_stat_button" type="object"
+                        name="action_view_partner_sale_orders"
+                        icon="fa-usd"
+                        context="{'default_partner_id': id,
+                                              'default_kam': kam}">
+                    <field name="sale_order_count" string="Sale Orders"
                            widget="statinfo"/>
                 </button>
-            </xpath>
-            <xpath expr="//page[@name='contact_addresses']" position="after">
-                <page name="customer_products" string="Order Products"
-                      class="product_list">
-                    <group col="12">
-                        <group colspan="5">
-                            <field name="product_filter_ids" invisible="1"/>
-                            <field name="product_ids" string="Products"
-                                   widget="many2many_tags"
-                                   options='{"no_open": True, "no_create": True}'
-                                   domain="[('type', 'in', ['consu']), ('id', 'not in', product_filter_ids)]"/>
-                        </group>
-                        <group colspan="1">
-                            <button name="add_product" id="add_product"
-                                    string="Add" class="oe_highlight"
-                                    type="object"/>
-                        </group>
-                        <group colspan="5">
-                            <field name="catalog_ids" widget="many2many_tags"
-                                   domain="[('catalog_type', '=', 'customer')]"
-                                   options='{"no_create": True}'/>
-                        </group>
-                        <group colspan="1">
-                            <button name="reset" id="reset" string="Reset"
-                                    type="object"
-                                    class="oe_highlight"
-                                    invisible="catalog_length == 0"/>
-                            <field name="product_catalog_ids" invisible="1"/>
-                        </group>
-                    </group>
-                    <group>
-                        <field class="oe_right"
-                               name="select_catalog_products"
-                               string="Add All"
-                               invisible="catalog_length == 0"/>
-                    </group>
-                    <field name="catalog_length" invisible="1"/>
-                    <field name="catalog_product_ids"
-                           invisible="catalog_length == 0">
-                        <list editable="bottom" create="0" delete="0">
-                            <field name="select_product" string=" "/>
-                            <field name="partner_id" column_invisible="1"/>
-                            <field name="product_id" column_invisible="1"/>
-                            <field name="catalog_id" force_save="1" readonly="1"
-                                   options="{'no_open': True, 'no_create': True, 'no_edit': True}"/>
-                            <field name="product_code" string="Product Code"/>
-                            <field name="name" string="Product"
-                                   force_save="1" readonly="1"/>
-                            <field name="categ_id"/>
-                            <field name="uom_id" column_invisible="1"/>
-                            <field name="tax_status" force_save="1"/>
-                            <field name="item_cost" string="Cost"
-                                   force_save="1"/>
-                            <field name="list_price"/>
-                            <field name="margin_price"/>
-                        </list>
-                    </field>
-                    <div>
-                        <button name="add_product_catalog"
-                                id="add_product_catalog"
-                                string="Add Catalog Products"
-                                class="btn btn-primary" type="object"
-                                invisible="catalog_length == 0"/>
-                    </div>
-                    <h2 invisible="product_select_uom_length == 0">
-                        Following Products Associated in
-                        Customer. You can add the Products with different UOM
-                    </h2>
-                    <field name="product_select_uom_length" invisible="1"/>
-                    <field name="multiple_uom_products"
-                           invisible="product_select_uom_length == 0">
-                        <list editable="bottom" create="0" delete="0">
-                            <field name="product_id"
-                                   options="{'no_open': True, 'no_create': True}"
-                                   readonly="1"/>
-                            <field name="uom_ids" widget="many2many_tags"
-                                   column_invisible="True"/>
-                            <field name="uom_id"
-                                   domain="[('id', 'in', uom_ids)]"
-                                   options="{'no_open': True, 'no_create': True}"/>
-                            <field name="multiple_uom_ids"
-                                   widget="many2many_tags"
-                                   column_invisible="True"/>
-                            <field name="multiple_uom_id"
-                                   column_invisible="True"/>
-                            <field name="add_product"/>
-                        </list>
-                        <form>
-                            <group>
-                                <group>
-                                    <field name="product_id"/>
-                                </group>
-                                <group>
-                                    <field name="uom_id" string="UOM"/>
-                                </group>
-                            </group>
-                        </form>
-                    </field>
-                    <div class="oe_right oe_inline">
-                        <button name="add_multiple_uom_product"
-                                id="add_multiple_uom_product"
-                                string="Add Products"
-                                class="oe_highlight" type="object"
-                                invisible="product_select_uom_length == 0"/>
-                        <span style="padding:2px"/>
-                        <button name="cancel_multiple_uom_product"
-                                id="cancel_multiple_uom_product"
-                                string="Cancel"
-                                type="object"
-                                invisible="product_select_uom_length == 0"/>
-                    </div>
-                    <separator string="Customer Products"/>
-                    <field name="customer_product_ids">
-                        <list editable="bottom" create="0">
-                            <field name="product_id" column_invisible="True"
-                                   options='{"no_open": True, "no_create": True}'/>
-                            <field name="product_code" string="Product Code"
-                                   options='{"no_open": True, "no_create": True}'/>
-                            <field name="name" string="Product"
-                                   options='{"no_open": True, "no_create": True}'/>
-                            <field name="cp_code"
-                                   column_invisible="parent.show_cp_code == False"/>
-                            <field name="uom_category" column_invisible="True"/>
-                            <field name="uom_ids" widget="many2many_tags"
-                                   column_invisible="True"/>
-                            <field name="unit_ids" widget="many2many_tags"
-                                   column_invisible="True"/>
-                            <field name="uom_id" string="UoM"
-                                   domain="[('id', 'in', unit_ids)]"
-                                   options='{"no_open": True, "no_create": True}'/>
-                            <field name="tax_status" readonly="1"
-                                   options='{"no_open": True, "no_create": True}'/>
-                            <field name="order_type"/>
-                            <field name="item_cost" string="Cost"
-                                   force_save="1"/>
-                            <field name="list_price" string="Price"/>
-                            <field name="margin_price" readonly="1"
-                                   force_save="1"/>
-                            <field name="catalog_id" column_invisible="True"/>
-                            <field name="price_status"/>
-                        </list>
-                        <form string="Customer Products">
-                            <div class="oe_title">
-                                <h3>
-                                    <field name="product_id"
-                                           options="{'no_open': True}"/>
-                                </h3>
-                            </div>
-                            <group>
-                                <group>
-                                    <field name="product_code"
-                                           string="Product Code"/>
-                                    <field name="name"/>
-                                    <field name="uom_category"/>
-                                    <field name="uom_id" string="UOM"
-                                           options="{'no_open': True, 'no_create': True}"/>
-                                    <field name="tax_status"/>
-                                </group>
-                                <group>
-                                    <field name="list_price"/>
-                                    <field name="item_cost" force_save="1"
-                                           string="Cost"/>
-                                    <field name="margin_price"/>
-                                    <field name="price_status"/>
-                                </group>
-                            </group>
-                        </form>
-                    </field>
-                </page>
             </xpath>
         </field>
     </record>

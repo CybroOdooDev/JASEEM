@@ -1,7 +1,7 @@
 /** @odoo-module */
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { registry } from "@web/core/registry";
-import { useRef, onMounted, onWillUnmount, onWillRender } from "@odoo/owl";
+import {X2ManyField, x2ManyField} from "@web/views/fields/x2many/x2many_field";
+import {registry} from "@web/core/registry";
+import {useRef, onMounted, onWillUnmount, onWillRender} from "@odoo/owl";
 
 export class NavigateOne2Many extends X2ManyField {
     static template = "web.X2ManyField";
@@ -15,6 +15,7 @@ export class NavigateOne2Many extends X2ManyField {
         this._list = null; // Store list data
         this._rows = []; // Store rows
         this._columns = []; // Store columns
+        this._previousEditingRecord = null; // Track the previously editing record
 
         onMounted(() => {
             if (this.root.el) {
@@ -66,7 +67,23 @@ export class NavigateOne2Many extends X2ManyField {
         return this.listRenderer.el?.querySelectorAll("tbody tr.o_data_row") || [];
     }
 
-    onKeyDown(event) {
+    async exitEditMode(record) {
+        if (record && record.isInEdition) {
+            try {
+                // Save the current record and exit edit mode
+                await this._list.leaveEditMode(record);
+                console.log("Successfully exited edit mode for record:", record.resId);
+            } catch (error) {
+                console.warn("Error exiting edit mode:", error);
+                // Force exit edit mode even if save fails
+                if (record.isInEdition) {
+                    record.isInEdition = false;
+                }
+            }
+        }
+    }
+
+    async onKeyDown(event) {
         if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
             return;
         }
@@ -87,41 +104,53 @@ export class NavigateOne2Many extends X2ManyField {
             return;
         }
 
-        // Initialize focus on first editable cell if no cell is currently focused
+        // Store the current editing record before navigation
+        const currentEditingRecord = this._list.records.find(record => record.isInEdition);
+
+        // Initialize focus on the first editable cell if no cell is currently focused
         if (this.currentRow === -1 || this.currentCol === -1) {
-            this.currentRow = 0;
-            this.currentCol = this.findFirstEditableColumn(0);
-            this.focusCell();
+            this.currentRow = 0; // Start with the first row
+            this.currentCol = this.findFirstEditableColumn(0); // Find the first editable column
+            await this.focusCell();
             return;
         }
+
+        const previousRow = this.currentRow;
+        const previousCol = this.currentCol;
 
         switch (event.key) {
             case "ArrowUp":
                 if (this.currentRow > 0) {
                     this.currentRow--;
-                    // Keep the same column index; focusCell will handle if it's not editable
-                    this.focusCell();
+                    this.currentCol = this.findFirstEditableColumn(this.currentRow); // Get editable column in the new row
                 }
                 break;
             case "ArrowDown":
                 if (this.currentRow < rows.length - 1) {
                     this.currentRow++;
-                    // Keep the same column index; focusCell will handle if it's not editable
-                    this.focusCell();
+                    this.currentCol = this.findFirstEditableColumn(this.currentRow); // Get editable column in the new row
                 }
                 break;
             case "ArrowLeft":
                 if (this.currentCol > 0) {
                     this.currentCol--;
-                    this.focusCell();
                 }
                 break;
             case "ArrowRight":
                 if (this.currentCol < cols.length - 1) {
                     this.currentCol++;
-                    this.focusCell();
                 }
                 break;
+        }
+
+        // Only proceed if the position actually changed
+        if (previousRow !== this.currentRow || previousCol !== this.currentCol) {
+            // Exit edit mode from the previous record if we're changing rows
+            if (previousRow !== this.currentRow && currentEditingRecord) {
+                await this.exitEditMode(currentEditingRecord);
+            }
+
+            await this.focusCell();
         }
     }
 
@@ -140,9 +169,21 @@ export class NavigateOne2Many extends X2ManyField {
         return 0; // Fallback to first column if no editable column is found
     }
 
-    focusCell() {
+    async focusCell() {
         const rows = this._rows;
         const cols = this._columns;
+
+        // Remove the selected-cell class from previously focused cell
+        if (this._previousRow !== undefined && this._previousCol !== undefined) {
+            const prevRowEl = rows[this._previousRow];
+            const prevColName = cols[this._previousCol]?.dataset.name;
+            if (prevRowEl && prevColName) {
+                const prevCell = prevRowEl.querySelector(`td[name="${prevColName}"]`);
+                if (prevCell) {
+                    prevCell.classList.remove("selected-cell");
+                }
+            }
+        }
 
         if (!rows[this.currentRow] || !cols[this.currentCol]) {
             console.warn(`No valid row or column at row ${this.currentRow}, col ${this.currentCol}`);
@@ -158,63 +199,64 @@ export class NavigateOne2Many extends X2ManyField {
             return;
         }
 
-        // If the cell is readonly, find the nearest editable column in the same row
-        if (cell.classList.contains("o_readonly_modifier")) {
-            let newColIndex = -1;
-            let leftIndex = this.currentCol - 1;
-            let rightIndex = this.currentCol + 1;
+        // Add the selected-cell class to the currently focused cell
+        cell.classList.add("selected-cell");
 
-            while (leftIndex >= 0 || rightIndex < cols.length) {
-                if (leftIndex >= 0) {
-                    const leftColName = cols[leftIndex].dataset.name;
-                    const leftCell = row.querySelector(`td[name="${leftColName}"]`);
-                    if (leftCell && !leftCell.classList.contains("o_readonly_modifier")) {
-                        newColIndex = leftIndex;
-                        break;
-                    }
-                    leftIndex--;
-                }
-                if (rightIndex < cols.length) {
-                    const rightColName = cols[rightIndex].dataset.name;
-                    const rightCell = row.querySelector(`td[name="${rightColName}"]`);
-                    if (rightCell && !rightCell.classList.contains("o_readonly_modifier")) {
-                        newColIndex = rightIndex;
-                        break;
-                    }
-                    rightIndex++;
-                }
-            }
-
-            if (newColIndex !== -1) {
-                this.currentCol = newColIndex;
-                this.focusCell(); // Recursively call focusCell with the new column
-                return;
-            }
-        }
-
-        // Find focusable element within the cell
-        const focusable = cell.querySelector("input, select, textarea, button, [tabindex]:not([tabindex='-1'])");
-
-        if (focusable) {
-            console.log("Focusable element found:", focusable);
-            focusable.focus();
-            if (["INPUT", "TEXTAREA"].includes(focusable.tagName)) {
-                focusable.select();
-            }
-        } else {
-            // Fallback to cell itself if no focusable element is found
-            cell.setAttribute("tabindex", "0");
-            cell.focus();
-            console.log(`No focusable element in cell at row ${this.currentRow}, column ${colName}`);
-        }
+        // Store the current indices for next focusCell call
+        this._previousRow = this.currentRow;
+        this._previousCol = this.currentCol;
 
         // Update table to indicate keyboard navigation
         this.listRenderer.el.querySelector("tbody")?.classList.add("o_keyboard_navigation");
 
-        // Trigger edit mode if the cell is editable
+        // Get the record for the current row
         const record = this._list.records[this.currentRow];
+
+        // Enter edit mode for the new record if the cell is editable
         if (record && !record.isInEdition && !cell.classList.contains("o_readonly_modifier")) {
-            this._list.enterEditMode(record);
+            try {
+                await this._list.enterEditMode(record);
+                console.log("Entered edit mode for record:", record.resId);
+
+                // Wait for the DOM to update after entering edit mode
+                await new Promise(resolve => setTimeout(resolve, 0));
+
+                // Re-query the cell after entering edit mode as the DOM might have changed
+                const updatedCell = row.querySelector(`td[name="${colName}"]`);
+                if (updatedCell) {
+                    // Find focusable element within the updated cell
+                    const focusable = updatedCell.querySelector("input, select, textarea, button, [tabindex]:not([tabindex='-1'])");
+                    if (focusable) {
+                        console.log("Focusable element found:", focusable);
+                        focusable.focus();
+                        if (["INPUT", "TEXTAREA"].includes(focusable.tagName)) {
+                            focusable.select();
+                        }
+                    } else {
+                        // Fallback to cell itself if no focusable element is found
+                        updatedCell.setAttribute("tabindex", "0");
+                        updatedCell.focus();
+                        console.log(`No focusable element in cell at row ${this.currentRow}, column ${colName}`);
+                    }
+                }
+            } catch (error) {
+                console.warn("Error entering edit mode:", error);
+                // Fallback to just focusing the cell
+                cell.setAttribute("tabindex", "0");
+                cell.focus();
+            }
+        } else {
+            // If not entering edit mode, just focus the cell
+            const focusable = cell.querySelector("input, select, textarea, button, [tabindex]:not([tabindex='-1'])");
+            if (focusable) {
+                focusable.focus();
+                if (["INPUT", "TEXTAREA"].includes(focusable.tagName)) {
+                    focusable.select();
+                }
+            } else {
+                cell.setAttribute("tabindex", "0");
+                cell.focus();
+            }
         }
     }
 }

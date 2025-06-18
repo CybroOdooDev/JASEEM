@@ -1,7 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_order_type,order.type,model_order_type,base_averigo.averigo_operator_user_group,1,1,1,1
-access_product_customer_uom,product.customer.uom,model_product_customer_uom,base_averigo.averigo_operator_user_group,1,1,1,1
-access_catalog_customer,catalog.customer,model_catalog_customer,base_averigo.averigo_operator_user_group,1,1,1,1
 access_sale_order,sale.order,model_sale_order,base_averigo.averigo_operator_user_group,1,1,1,1
 access_sale_order_line,sale.order.line,model_sale_order_line,base_averigo.averigo_operator_user_group,1,1,1,1
 access_sale_order_option,sale.order.option,sale_management.model_sale_order_option,base_averigo.averigo_operator_user_group,1,1,1,1
