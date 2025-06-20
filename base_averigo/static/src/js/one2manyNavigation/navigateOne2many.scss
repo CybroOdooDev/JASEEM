@@ -2,16 +2,22 @@
     background-color: #e0f7fa !important;
     border: 2px solid #0288d1 !important;
     position: relative;
+    z-index: 1;
 }
 
 .o_data_cell:focus-within {
     outline: none;
 }
 
-/* Ensure inputs are fully visible when focused */
 .o_data_cell input:focus,
 .o_data_cell select:focus,
-.o_data_cell textarea:focus {
+.o_data_cell textarea:focus,
+.o_data_cell .o_field_widget input:focus,
+.o_data_cell .o_field_widget select:focus,
+.o_data_cell .o_field_widget textarea:focus,
+.o_data_cell .o_field_widget .o_input:focus,
+.o_data_cell .o_datepicker_input:focus {
     outline: none;
     border: 1px solid #0288d1;
+    background-color: #ffffff;
 }
