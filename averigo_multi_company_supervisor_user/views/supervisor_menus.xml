@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <menuitem
+                name="Inventory " id="averigo_supervisor_inventory" sequence="2"
+                groups="base_averigo.averigo_multi_company_super_user_group"
+                web_icon="stock,static/description/icon.png"/>
+        <menuitem
+                name="Product Master" id="menu_action_products_supervisor"
+                sequence="1" groups="base_averigo.averigo_multi_company_super_user_group"
+                action="averigo_base_inventory.single_product_master_action"
+                parent="averigo_supervisor_inventory"/>
+        <menuitem
+                name="Micromarkets" id="averigo_supervisor_micromarkets" sequence="2"
+                groups="base_averigo.averigo_multi_company_super_user_group"
+                action="averigo_micro_market.micro_market_action"
+                parent="averigo_supervisor_inventory"/>
+        <menuitem
+                name="Customer Care" id="menu_res_customers_main" sequence="1"
+                groups="base_averigo.averigo_multi_company_super_user_group"/>
+        <menuitem name="Customer" id="menu_action_res_customers" sequence="1"
+                  groups="base_averigo.averigo_multi_company_super_user_group"
+                  action="averigo_base_customer.res_partner_operator_action"
+                  parent="menu_res_customers_main"/>
+        <menuitem name="CRM" id="menu_action_supervisor_crm" sequence="0"
+                  groups="base_averigo.averigo_multi_company_super_user_group"/>
+        <menuitem name="Opportunities" id="crm_opportunities" sequence="2"
+                  groups="base_averigo.averigo_multi_company_super_user_group"
+                  action="averigo_crm.action_view_opportunities"
+                  parent="menu_action_supervisor_crm"/>
+        <menuitem name="Leads" id="crm_menu_leads" sequence="1"
+                  groups="base_averigo.averigo_multi_company_super_user_group"
+                  action="crm.crm_lead_all_leads"
+                  parent="menu_action_supervisor_crm"/>
+    </data>
+</odoo>

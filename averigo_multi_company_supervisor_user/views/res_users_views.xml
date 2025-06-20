@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="averigo_multi_supervisor_form" model="ir.ui.view">
+            <field name="name">averigo.multi.supervisor.form</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <form string="Users">
+                    <header>
+                        <field name="state"/>
+                        <button string="Send an Invitation Email"
+                                type="object" name="action_reset_password" context="{'create_user': 1}"
+                                invisible="state != 'new'"/>
+                    </header>
+                    <sheet>
+                        <field name="is_supervisor" invisible="1"/>
+                        <field name="id" invisible="1"/>
+                        <div class="alert alert-info text-center mb-3" invisible="id > 0" role="alert">
+                            You are inviting a new user.
+                        </div>
+                        <field name="image_1920" widget="image" class="oe_avatar"
+                               options="{&quot;zoom&quot;: true, &quot;preview_image&quot;: &quot;image_128&quot;}"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" required="1"/>
+                            </h1>
+                            <field name="email" invisible="1"/>
+                            <label for="login" class="oe_edit_only" string="Email Address"/>
+                            <h2>
+                                <field name="login" placeholder="email@yourcompany.com" widget="username"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="company_id"
+                                       groups="base.group_multi_company" readonly="1"/>
+<!--                                <field name="operator_report_ids" widget="many2many_tags"-->
+<!--                                       domain="[('show_in_report_menu', '=', True)]"-->
+<!--                                       options="{'no_create': True, 'no_open': True}"/>-->
+                            </group>
+                            <group>
+                                <field name="company_ids"
+                                       groups="base.group_multi_company" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                        <field name="groups_id"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_view_multicompany_users" model="ir.actions.act_window">
+            <field name="name">Multi Company Users</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">list,form</field>
+            <field name="context" eval='{"default_is_supervisor": True,
+                "default_company_id":1,"default_company_ids":[1,],
+                "default_groups_id":[ref("base.group_user"),
+                ref("base_averigo.averigo_multi_company_super_user_group")]}'>
+            </field>
+            <field name="domain">[('is_supervisor', '=', True)]</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'list'}),
+                    (0, 0, {'view_mode': 'form', 'view_id': ref('averigo_multi_company_supervisor_user.averigo_multi_supervisor_form')})]"/>
+        </record>
+        <menuitem name="Multi Company Users" id="averigo_multi_company_users"
+              action="action_view_multicompany_users"
+              sequence="8"
+              groups="base_averigo.averigo_admin_backend_group"/>
+    </data>
+</odoo>
